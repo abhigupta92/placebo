@@ -1,0 +1,130 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.RegistrationFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvRegistration_registration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Registration"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/tvName_registration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvRegistration_registration"
+                android:layout_marginTop="25dp"
+                android:text="Name : " />
+
+            <EditText
+                android:id="@+id/etName_registration"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvRegistration_registration"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_toRightOf="@+id/tvName_registration"
+                android:hint="Enter Name" />
+
+            <TextView
+                android:id="@+id/tvEmail_registration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/etName_registration"
+                android:layout_marginTop="25dp"
+                android:text="Email : " />
+
+            <EditText
+                android:id="@+id/etEmail_registration"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/etName_registration"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_toRightOf="@+id/tvEmail_registration"
+                android:hint="Enter Email ID" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/etEmail_registration"
+                android:layout_marginTop="25dp"
+                android:id="@+id/tvPassword_registration"
+                android:text="Password"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:hint="Enter a strong password"
+                android:id="@+id/etPassword_registration"
+                android:layout_toRightOf="@id/tvPassword_registration"
+                android:layout_below="@+id/etEmail_registration"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="10dp"/>
+
+            <TextView
+                android:id="@+id/tvDOB_registration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/etPassword_registration"
+                android:layout_marginTop="25dp"
+                android:text="Date Of Birth : " />
+
+            <EditText
+                android:id="@+id/etDOB_registration"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/etPassword_registration"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_toRightOf="@+id/tvDOB_registration"
+                android:hint="Enter DOB" />
+
+            <TextView
+                android:id="@+id/tvHometown_registration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/etDOB_registration"
+                android:layout_marginTop="25dp"
+                android:text="Hometown : " />
+
+            <fragment
+                android:id="@+id/etHometown_registration"
+                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tvHometown_registration"
+                android:layout_marginLeft="20dp"
+                android:layout_below="@+id/etDOB_registration"
+                android:layout_marginTop="25dp" />
+
+            <Button
+                android:id="@+id/bRegister_registration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvHometown_registration"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="50dp"
+                android:text="Register" />
+
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</FrameLayout>

@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Hive</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="make_post">Hello MAKE A POST HERE</string>
+    <string name="facebook_app_id">431448470387814</string>
+    <string name="search_event">Search any event</string>
+    <string name="buttonSearch">Search</string>
+    <string name="eventName">Event Name :</string>
+    <string name="eventType">Event Type :</string>
+    <string name="eventLocation">Location :</string>
+    <string name="NumOfPeople">Expected Number Of People :</string>
+    <string name="date">Date :</string>
+    <string name="time">Time :</string>
+    <string name="description">Description :</string>
+
+    <string-array name="categories">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
+
+    <string-array name="eventType">
+        <item>General</item>
+        <item>Sports</item>
+        <item>Education</item>
+    </string-array>
+</resources>

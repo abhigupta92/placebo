@@ -1,0 +1,92 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.UserProfileFragment">
+
+    <RelativeLayout
+        android:id="@+id/tvScreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffffff">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="#ffff5d4d"
+                android:orientation="horizontal">
+
+                <com.facebook.login.widget.ProfilePictureView
+                    android:id="@+id/profilePic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp">
+
+                </com.facebook.login.widget.ProfilePictureView>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvProfileDetails"
+                        android:layout_width="match_parent"
+                        android:layout_height="75dp"
+                        android:focusable="false"
+                        android:gravity="center"
+                        android:text="         Abhishek Gupta, 23\nKochi\nIndia"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#fffff71f" />
+
+                    <TextView
+                        android:id="@+id/tvProfilePostDetails"
+                        android:layout_width="match_parent"
+                        android:layout_height="75dp"
+                        android:gravity="center"
+                        android:text="Total Posts : 30
+            Last Posted: 34/34/34"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#fffff71f" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvStatusDetails"
+                    android:layout_width="250dp"
+                    android:layout_height="100dp"
+                    android:gravity="center"
+                    android:text=""
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="#fffff71f" />
+
+
+                <!--
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <fragment
+                        android:id="@+id/place_autocomplete_fragment"
+                        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </android.support.v7.widget.CardView> -->
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</FrameLayout>

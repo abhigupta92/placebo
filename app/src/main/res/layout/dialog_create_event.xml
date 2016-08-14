@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+
+        <TextView
+            android:id="@+id/tvEventName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/eventName" />
+
+        <EditText
+            android:id="@+id/etEventName_create_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvEventName"
+            android:layout_margin="5dp" />
+
+        <TextView
+            android:id="@+id/tvEventType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etEventName_create_event"
+            android:layout_margin="5dp"
+            android:text="@string/eventType" />
+
+        <Spinner
+            android:id="@+id/spinnerEventType_create_event"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_below="@+id/tvEventType"
+            android:layout_margin="5dp"
+            android:entries="@array/eventType"></Spinner>
+
+        <TextView
+            android:id="@+id/tvEventLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spinnerEventType_create_event"
+            android:layout_margin="5dp"
+            android:text="@string/eventLocation" />
+
+        <fragment
+            android:id="@+id/place_autocomplete_fragment_create_event"
+            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvEventLocation"
+            android:layout_margin="5dp" />
+
+        <TextView
+            android:id="@+id/tvNumOfPeople"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/place_autocomplete_fragment_create_event"
+            android:layout_margin="5dp"
+            android:text="@string/NumOfPeople" />
+
+        <EditText
+            android:id="@+id/etNumOfPeople_create_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvNumOfPeople"
+            android:layout_margin="5dp"
+            android:ems="10"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etNumOfPeople_create_event"
+            android:layout_margin="5dp"
+            android:text="@string/date" />
+
+        <EditText
+            android:id="@+id/etSetDate_create_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvDate"
+            android:layout_margin="5dp" />
+
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etSetDate_create_event"
+            android:layout_margin="5dp"
+            android:text="@string/time" />
+
+        <EditText
+            android:id="@+id/etSetTime_create_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvTime"
+            android:layout_margin="5dp" />
+
+        <TextView
+            android:id="@+id/tvEventDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etSetTime_create_event"
+            android:layout_margin="5dp"
+            android:text="@string/description" />
+
+        <EditText
+            android:id="@+id/etEventDesc_create_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvEventDesc"
+            android:layout_margin="5dp" />
+
+        <Button
+            android:id="@+id/createEventButton_create_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etEventDesc_create_event"
+            android:layout_margin="5dp"
+            android:text="Create !" />
+
+        <Button
+            android:id="@+id/cancelEventButton_create_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etEventDesc_create_event"
+            android:layout_margin="5dp"
+            android:layout_toRightOf="@+id/createEventButton_create_event"
+            android:text="Cancel" />
+
+
+    </RelativeLayout>
+
+</ScrollView>

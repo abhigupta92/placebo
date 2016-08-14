@@ -1,0 +1,97 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.EventDetailFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:text="Event Organized by : " />
+
+            <com.facebook.login.widget.ProfilePictureView
+                android:id="@+id/eventProfilePic_event_detail"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center">
+
+            </com.facebook.login.widget.ProfilePictureView>
+
+            <!-- TODO: Update blank fragment layout -->
+            <TextView
+                android:id="@+id/tvUserName_event_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="No Name" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event Name : "
+                android:id="@+id/tvEventName_event_detail"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event Desc : "
+                android:id="@+id/tvEventDesc_event_detail"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number of people : "
+                android:id="@+id/tvNumOfPeople_event_detail"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event Type : "
+                android:id="@+id/tvEventType_event_detail"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event Location : "
+                android:id="@+id/tvEventLocation_event_detail"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event Date : "
+                android:id="@+id/tvEventDate_event_detail"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event Time : "
+                android:id="@+id/tvEventTime_event_detail"/>
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your interest : "
+                android:id="@+id/toggleUserInterest_event_detail"/>
+
+            <Button
+                android:id="@+id/buttonBack_event_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="back" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>

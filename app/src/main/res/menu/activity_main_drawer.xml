@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/user_profile"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Profile" />
+        <item
+            android:id="@+id/hive_events"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Events" />
+        <item
+            android:id="@+id/create_post"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Share Your View" />
+        <item
+            android:id="@+id/all_posts"
+            android:icon="@drawable/ic_menu_share"
+            android:title="View Hive" />
+
+        <item
+            android:id="@+id/nav_edit_profile"
+            android:icon="@drawable/ic_setting_light"
+            android:title="Edit Profile" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_camera"
+                android:icon="@drawable/ic_menu_camera"
+                android:title="Something Here" />
+
+            <item
+                android:id="@+id/events"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Send" />
+        </menu>
+    </item>
+
+</menu>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp">
+
+        <ImageView
+            android:id="@+id/postImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="20dp"
+        android:background="#ffff431a"
+        android:weightSum="8">
+
+        <com.facebook.login.widget.ProfilePictureView
+            android:id="@+id/hivePostPicID"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="2">
+
+        </com.facebook.login.widget.ProfilePictureView>
+
+        <TextView
+            android:id="@+id/listViewPostTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="12dp"
+            android:text="helloooo"
+            android:textAlignment="gravity"
+            android:textColor="#fff5f3ff"
+            android:textSize="15dp"
+            android:layout_weight="2"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkboxLike"
+            android:layout_weight="2"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

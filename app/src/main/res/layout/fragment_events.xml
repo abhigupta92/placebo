@@ -1,0 +1,34 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.EventsFragment">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/etSearchEvents"
+            android:layout_width="225dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/search_event"
+            android:layout_marginLeft="5dp"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonEventSearch"
+            android:layout_toRightOf="@+id/etSearchEvents"
+            android:layout_marginLeft="5dp"
+            android:text="@string/buttonSearch"/>
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/listViewEvents"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/etSearchEvents"/>
+    </RelativeLayout>
+</FrameLayout>
