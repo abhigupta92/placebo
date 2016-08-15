@@ -58,9 +58,10 @@ public class MainActivity extends AppCompatActivity
 
     static UserSessionUtils userSession;
 
+    static MainActivity instance;
+
     public static ProgressDialog progDailog;
     FloatingActionButton fab;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity
         // Facebook Login Check
         FacebookSdk.sdkInitialize(getApplicationContext());
 
+        instance = this;
         //Setting Main Screen
         setTitle("Hive");
         setContentView(R.layout.activity_main);
@@ -158,9 +160,9 @@ public class MainActivity extends AppCompatActivity
     /**
      * Used to set login screen because facebook login has not been done.
      */
-    private void setLoginScreen() {
+    public static void setLoginScreen() {
         LoginFragment loginFragment = new LoginFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getInstance().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, loginFragment, String.valueOf(Enums.LOGINFRAGMENT));
         transaction.addToBackStack(String.valueOf(Enums.LOGINFRAGMENT));
         transaction.commit();
@@ -412,6 +414,10 @@ public class MainActivity extends AppCompatActivity
         progDailog.hide();
     }
 
+    public static MainActivity getInstance() {
+        return instance;
+    }
+
     public String getActiveFragment() {
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             return null;
@@ -440,6 +446,7 @@ public class MainActivity extends AppCompatActivity
         Snackbar.make(getCurrentFocus(), "Some Error has occured with the server !... Please try again later !", Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show();
     }
+
 
 
 }

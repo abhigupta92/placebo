@@ -17,6 +17,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
@@ -26,11 +28,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import hive.hive.com.hive.Activities.MainActivity;
+import hive.hive.com.hive.Adapters.HiveSelectionCustomListAdapter;
 import hive.hive.com.hive.GSONEntities.ClosestHiveDetail;
 import hive.hive.com.hive.GSONEntities.UserSettingsDetails;
 import hive.hive.com.hive.R;
 import hive.hive.com.hive.Utils.ConnectionUtils;
-import hive.hive.com.hive.Adapters.HiveSelectionCustomListAdapter;
+import hive.hive.com.hive.Utils.UserSessionUtils;
+
+import static hive.hive.com.hive.Utils.Enums.FACEBOOK_LOGIN;
+import static hive.hive.com.hive.Utils.Enums.HIVE_LOGIN;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,13 +53,15 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+    static UserSessionUtils userSession;
+
     private String mParam1;
     private String mParam2;
     private boolean haveGeoLocationDetails = false;
     EditText etName, etAbout;
     private String gender;
-    Button bSubmit;
+    CallbackManager callbackManager;
+    Button bSubmit, bLogout;
     public static View view;
     private static long selectedHiveId;
     private static long selectedClusterId;
@@ -141,7 +150,12 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
     private void initializeViews(View view) {
 
+
+        userSession = MainActivity.getUserSession();
         autocompleteFragment = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        bLogout = (Button) view.findViewById(R.id.edit_profile_logout);
+        bLogout.setOnClickListener(this);
 
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -160,8 +174,8 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
                 if (haveGeoLocationDetails) {
                     listOfHives = ConnectionUtils.getExistingClosestHives();
-                    if(listOfHives.size() == 0){
-                        ClosestHiveDetail closestHiveDetail = new ClosestHiveDetail(1,0, String.valueOf(place.getName()),0);
+                    if (listOfHives.size() == 0) {
+                        ClosestHiveDetail closestHiveDetail = new ClosestHiveDetail(1, 0, String.valueOf(place.getName()), 0);
                         listOfHives.add(closestHiveDetail);
                     }
                     AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
@@ -169,7 +183,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                     builderSingle.setTitle("Select A Hive :");
 
                     if (listOfHives != null) {
-                        Log.d("Not Null","hives");
+                        Log.d("Not Null", "hives");
 
                         final HiveSelectionCustomListAdapter adapter = new HiveSelectionCustomListAdapter(getActivity().getApplicationContext(), R.layout.closest_hive_detail, listOfHives);
 
@@ -293,6 +307,14 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                 else {
                     Toast.makeText(getContext(), "Please select your Gender !", Toast.LENGTH_LONG).show();
                 }
+                break;
+            case R.id.edit_profile_logout:
+                    if(userSession.getUserDetails().getKEY_LOGIN_TYPE() == FACEBOOK_LOGIN.getVal()){
+                        LoginManager.getInstance().logOut();
+                        userSession.logoutUser();
+                    }else if(userSession.getUserDetails().getKEY_LOGIN_TYPE() == HIVE_LOGIN.getVal()){
+
+                    }
                 break;
 
         }

@@ -29,6 +29,7 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
+import hive.hive.com.hive.Activities.MainActivity;
 import hive.hive.com.hive.ConnectionResults.RegisterUserResultDetails;
 import hive.hive.com.hive.R;
 import hive.hive.com.hive.Utils.ConnectionUtils;
@@ -152,7 +153,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                                     register = ConnectionUtils.registerUser(params);
 
                                     if (register.getResult().contentEquals("success")) {
-                                        session = new UserSessionUtils(getActivity().getApplicationContext());
+                                        session = MainActivity.getUserSession();
                                         session.createUserLoginSession(object.getString("id"), "", salt, Long.parseLong(FACEBOOK_LOGIN.getVal()));
                                         FacebookUtils.setProfileId(object.getString("id"));
                                         setLoggedInStatus(AccessToken.getCurrentAccessToken());

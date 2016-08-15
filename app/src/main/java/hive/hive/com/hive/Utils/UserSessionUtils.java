@@ -5,11 +5,10 @@ package hive.hive.com.hive.Utils;
  */
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import hive.hive.com.hive.Activities.MainActivity;
+import static hive.hive.com.hive.Activities.MainActivity.setLoginScreen;
 
 public class UserSessionUtils {
     // Shared Preferences reference
@@ -103,18 +102,7 @@ public class UserSessionUtils {
         // Clearing all user data from Shared Preferences
         editor.clear();
         editor.commit();
-
-        // After logout redirect user to MainActivity
-        Intent i = new Intent(_context, MainActivity.class);
-
-        // Closing all the Activities
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        // Add new Flag to start new Activity
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        // Staring Login Activity
-        _context.startActivity(i);
+        setLoginScreen();
     }
 
 

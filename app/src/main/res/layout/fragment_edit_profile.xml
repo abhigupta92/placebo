@@ -4,6 +4,11 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.EditProfileFragment">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -87,16 +92,16 @@
                     android:text="Gender : " />
 
                 <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/gender_radio_group"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:id="@+id/gender_radio_group">
+                    android:orientation="horizontal">
 
                     <RadioButton
                         android:id="@+id/radio_male"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Male"/>
+                        android:text="Male" />
 
                     <RadioButton
                         android:id="@+id/radio_female"
@@ -107,7 +112,6 @@
 
             </LinearLayout>
 
-
             <Button
                 android:id="@+id/button_edit_profile_submit"
                 android:layout_width="match_parent"
@@ -115,5 +119,15 @@
                 android:layout_margin="20dp"
                 android:text="Update" />
 
+            <Button
+                android:id="@+id/edit_profile_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Logout"/>
+
+
         </LinearLayout>
+
+    </ScrollView>
 </FrameLayout>
