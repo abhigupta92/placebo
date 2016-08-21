@@ -10,9 +10,6 @@ public class RegisterUserResultDetails {
     @SerializedName("userId")
     public String userId;
 
-    @SerializedName("password")
-    public String password;
-
     @SerializedName("salt")
     public String salt;
 
@@ -25,9 +22,8 @@ public class RegisterUserResultDetails {
     @SerializedName("errMsg")
     public String errMsg;
 
-    public RegisterUserResultDetails(String userId, String password, String salt, String result, String errCd, String errMsg) {
+    public RegisterUserResultDetails(String userId, String salt, String result, String errCd, String errMsg) {
         this.userId = userId;
-        this.password = password;
         this.salt = salt;
         this.result = result;
         this.errCd = errCd;
@@ -64,16 +60,6 @@ public class RegisterUserResultDetails {
 
     public void setErrMsg(String errMsg) {
         this.errMsg = errMsg;
-    }
-
-
-    public String getPassword() {
-        return password;
-
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getSalt() {

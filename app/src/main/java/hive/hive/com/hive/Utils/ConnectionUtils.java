@@ -411,7 +411,7 @@ public class ConnectionUtils {
         return registrationResult;
     }
 
-    public static void loginUser(ContentValues cvLogin) {
+    public static LoginUserResultDetail loginUser(ContentValues cvLogin) {
 
         boolean loginResult = false;
 
@@ -429,9 +429,9 @@ public class ConnectionUtils {
         }
 
         Gson gson = new Gson();
-        //loginResultDetails = gson.fromJson(result.toString(), LoginUserResultDetail.class);
+        loginResultDetails = gson.fromJson(result.toString(), LoginUserResultDetail.class);
 
-        return;
+        return loginResultDetails;
     }
 
     public static String getQuery(ContentValues params) {

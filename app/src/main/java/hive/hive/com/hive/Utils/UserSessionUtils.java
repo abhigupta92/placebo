@@ -31,7 +31,6 @@ public class UserSessionUtils {
 
     // User name and password(make variable public to access from outside)
     public static final String KEY_USERID = "USERID";
-    public static final String KEY_PASSWORD = "PASSWORD";
     public static final String KEY_SALT = "SALT";
 
     public static final String KEY_LOGIN_TYPE = "LOGIN_TYPE";
@@ -47,15 +46,12 @@ public class UserSessionUtils {
     }
 
     //Create login session
-    public void createUserLoginSession(String userId, String password, String salt, long loginType) {
+    public void createUserLoginSession(String userId, String salt, long loginType) {
         // Storing login value as TRUE
         editor.putBoolean(IS_USER_LOGIN, true);
 
         // Storing name in preferences
         editor.putString(KEY_USERID, userId);
-
-        // Storing email in preferences
-        editor.putString(KEY_PASSWORD, password);
 
         editor.putString(KEY_SALT, salt);
 
@@ -86,7 +82,6 @@ public class UserSessionUtils {
 
         UserSessionDetails userDetails = new UserSessionDetails();
         userDetails.setKEY_USERID(pref.getString(KEY_USERID, null));
-        userDetails.setKEY_PASSWORD(pref.getString(KEY_PASSWORD, null));
         userDetails.setKEY_SALT(pref.getString(KEY_SALT, null));
         userDetails.setKEY_LOGIN_TYPE(String.valueOf(pref.getLong(KEY_LOGIN_TYPE, 0)));
         userDetails.setKEY_USERNAME(String.valueOf(this.userName));

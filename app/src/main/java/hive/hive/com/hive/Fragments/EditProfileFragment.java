@@ -309,13 +309,15 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                 }
                 break;
             case R.id.edit_profile_logout:
-                    if(userSession.getUserDetails().getKEY_LOGIN_TYPE() == FACEBOOK_LOGIN.getVal()){
-                        LoginManager.getInstance().logOut();
-                        userSession.logoutUser();
-                    }else if(userSession.getUserDetails().getKEY_LOGIN_TYPE() == HIVE_LOGIN.getVal()){
+                if (userSession.getUserDetails().getKEY_LOGIN_TYPE() == FACEBOOK_LOGIN.getVal()) {
+                    LoginManager.getInstance().logOut();
+                } else if (userSession.getUserDetails().getKEY_LOGIN_TYPE() == HIVE_LOGIN.getVal()) {
 
-                    }
+                }
+                userSession.logoutUser();
                 break;
+
+
 
         }
 

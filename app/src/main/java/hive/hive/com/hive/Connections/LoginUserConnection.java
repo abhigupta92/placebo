@@ -57,11 +57,10 @@ public class LoginUserConnection extends AsyncTask<Void, Void, JSONObject> {
                 in = conn.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
                 while ((data = reader.readLine()) != null) {
-                    Log.d("DATA", data);
                     result.append(data);
                 }
                 Log.d("RESULT : ", result.toString());
-                //return new JSONObject(result.toString());
+                return new JSONObject(result.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();

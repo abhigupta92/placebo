@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import hive.hive.com.hive.Activities.MainActivity;
 import hive.hive.com.hive.ConnectionResults.RegisterUserResultDetails;
 import hive.hive.com.hive.R;
 import hive.hive.com.hive.Utils.ConnectionUtils;
@@ -159,8 +160,8 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
                 RegisterUserResultDetails result = ConnectionUtils.registerUser(cvRegDetails);
                 if (result != null) {
                     if (result.getResult().contentEquals("success")) {
-                        session = new UserSessionUtils(getActivity().getApplicationContext());
-                        session.createUserLoginSession(result.getUserId(), result.getPassword(), result.getSalt(), Long.parseLong(HIVE_LOGIN.getVal()));
+                        session = MainActivity.getUserSession();
+                        session.createUserLoginSession(result.getUserId(), result.getSalt(), Long.parseLong(HIVE_LOGIN.getVal()));
                         EditProfileFragment editProfileFragment = new EditProfileFragment();
                         FragmentTransaction transaction = getFragmentManager().beginTransaction();
                         transaction.replace(R.id.fragment_container, editProfileFragment, EDITPROFILEFRAGMENT.name());

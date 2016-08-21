@@ -1,5 +1,6 @@
 package hive.hive.com.hive.Activities;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
@@ -35,6 +37,7 @@ import hive.hive.com.hive.Fragments.LoginFragment;
 import hive.hive.com.hive.Fragments.RegistrationFragment;
 import hive.hive.com.hive.Fragments.UserProfileFragment;
 import hive.hive.com.hive.R;
+import hive.hive.com.hive.Utils.ConnectionUtils;
 import hive.hive.com.hive.Utils.Enums;
 import hive.hive.com.hive.Utils.FacebookUtils;
 import hive.hive.com.hive.Utils.UserSessionUtils;
@@ -78,6 +81,7 @@ public class MainActivity extends AppCompatActivity
 
         userSession = new UserSessionUtils(getApplicationContext());
         UserSessionUtils.UserSessionDetails userSessionDetails = userSession.getUserDetails();
+        ConnectionUtils.setUserSessionDetails(userSessionDetails);
 
         if (userSession.checkLogin()) {
             if (userSessionDetails.getKEY_LOGIN_TYPE() == FACEBOOK_LOGIN.getVal()) {
@@ -105,8 +109,9 @@ public class MainActivity extends AppCompatActivity
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, userProfileFragment, String.valueOf(Enums.USERPROFILEFRAGMENT));
                 transaction.addToBackStack(String.valueOf(Enums.USERPROFILEFRAGMENT));
+                transaction.commit();
             }
-        }else{
+        } else {
             setLoginScreen();
         }
     }
@@ -228,13 +233,15 @@ public class MainActivity extends AppCompatActivity
                 getFragmentManager().popBackStack();
             } else if (currentScreen.contentEquals(USERPROFILEFRAGMENT.name())) {
                 this.finish();
-            } else {
+            } else if (userSession.isUserLoggedIn()) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 UserProfileFragment userProfileFragment = (UserProfileFragment) fragmentManager.findFragmentByTag(USERPROFILEFRAGMENT.name());
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, userProfileFragment, USERPROFILEFRAGMENT.name());
                 transaction.addToBackStack(USERPROFILEFRAGMENT.name());
                 transaction.commit();
+            } else {
+                this.finish();
             }
         }
     }
@@ -448,5 +455,22 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Hides the soft keyboard
+     */
+    public static void hideSoftKeyboard(Activity activity) {
+        if (activity.getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        }
+    }
 
+    /**
+     * Shows the soft keyboard
+     */
+    public static void showSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        inputMethodManager.showSoftInput(view, 0);
+    }
 }

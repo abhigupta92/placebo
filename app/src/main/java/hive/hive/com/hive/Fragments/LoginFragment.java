@@ -3,8 +3,10 @@ package hive.hive.com.hive.Fragments;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -30,14 +32,17 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 import hive.hive.com.hive.Activities.MainActivity;
+import hive.hive.com.hive.ConnectionResults.LoginUserResultDetail;
 import hive.hive.com.hive.ConnectionResults.RegisterUserResultDetails;
 import hive.hive.com.hive.R;
 import hive.hive.com.hive.Utils.ConnectionUtils;
+import hive.hive.com.hive.Utils.Enums;
 import hive.hive.com.hive.Utils.FacebookUtils;
 import hive.hive.com.hive.Utils.StringUtils;
 import hive.hive.com.hive.Utils.UserSessionUtils;
 
 import static hive.hive.com.hive.Utils.Enums.FACEBOOK_LOGIN;
+import static hive.hive.com.hive.Utils.Enums.HIVE_LOGIN;
 import static hive.hive.com.hive.Utils.Enums.USERPROFILEFRAGMENT;
 import static hive.hive.com.hive.Utils.FacebookUtils.setLoggedInStatus;
 
@@ -62,6 +67,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     EditText etEmail, etPassword;
     CallbackManager callbackManager;
     UserSessionUtils session;
+
+    final private String LOGIN_RESULT_SUCCESS = "success";
+    final private String LOGIN_RESULT_FAIL = "fail";
 
     Button bRegister, bLogin;
 
@@ -154,7 +162,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
                                     if (register.getResult().contentEquals("success")) {
                                         session = MainActivity.getUserSession();
-                                        session.createUserLoginSession(object.getString("id"), "", salt, Long.parseLong(FACEBOOK_LOGIN.getVal()));
+                                        session.createUserLoginSession(object.getString("id"), salt, Long.parseLong(FACEBOOK_LOGIN.getVal()));
                                         FacebookUtils.setProfileId(object.getString("id"));
                                         setLoggedInStatus(AccessToken.getCurrentAccessToken());
                                         UserProfileFragment userProfileFragment = new UserProfileFragment();
@@ -198,6 +206,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         tvPassword = (TextView) view.findViewById(R.id.tvPassword_login);
         etEmail = (EditText) view.findViewById(R.id.etEmail_login);
         etPassword = (EditText) view.findViewById(R.id.etPassword_login);
+
+        MainActivity.showSoftKeyboard(getActivity());
     }
 
     @Override
@@ -242,12 +252,59 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.bLogin_login:
-                ContentValues cvLogin = new ContentValues();
-                cvLogin.put("USERID", etEmail.getText().toString());
-                cvLogin.put("PASSWORD", etPassword.getText().toString());
-                ConnectionUtils.loginUser(cvLogin);
+                clearErrors();
+                hideKeyboard();
+                if (checkFields()) {
+                    ContentValues cvLogin = new ContentValues();
+                    cvLogin.put("EMAILID", etEmail.getText().toString());
+                    cvLogin.put("PASSWORD", etPassword.getText().toString());
+                    LoginUserResultDetail loginRes = ConnectionUtils.loginUser(cvLogin);
+                    if (loginRes.getResult().contentEquals(LOGIN_RESULT_SUCCESS)) {
+                        UserSessionUtils userSession = MainActivity.getUserSession();
+                        userSession.createUserLoginSession(loginRes.getUserId(), loginRes.getSalt(), Long.valueOf(HIVE_LOGIN.getVal()));
+                        UserProfileFragment userProfileFragment = new UserProfileFragment();
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_container, userProfileFragment, Enums.USERPROFILEFRAGMENT.name());
+                        transaction.addToBackStack(USERPROFILEFRAGMENT.name());
+                        transaction.commit();
+                    } else if (loginRes.getResult().contentEquals(LOGIN_RESULT_FAIL)) {
+                        Snackbar.make(getActivity().getCurrentFocus(), loginRes.getErrMsg(), Snackbar.LENGTH_SHORT)
+                                .setAction("Action", null).show();
+                        tvEmail.setTextColor(Color.RED);
+                        tvPassword.setTextColor(Color.RED);
+                    }
+                } else {
+
+                }
         }
 
+    }
+
+    private void hideKeyboard() {
+        MainActivity.hideSoftKeyboard(getActivity());
+    }
+
+    private void clearErrors() {
+        tvEmail.setTextColor(Color.BLACK);
+        tvPassword.setTextColor(Color.BLACK);
+    }
+
+    /*
+    Checks for valid login id and password entries
+     */
+    private boolean checkFields() {
+
+        boolean fieldSet = true;
+        if (etEmail.length() == 0) {
+            tvEmail.setTextColor(Color.RED);
+            fieldSet = false;
+        }
+        if (etPassword.length() == 0) {
+            tvPassword.setTextColor(Color.RED);
+            fieldSet = false;
+        }
+
+        return fieldSet;
     }
 
     /**
