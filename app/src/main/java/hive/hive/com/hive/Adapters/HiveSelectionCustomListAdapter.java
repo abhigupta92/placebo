@@ -1,7 +1,6 @@
 package hive.hive.com.hive.Adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,13 +39,15 @@ public class HiveSelectionCustomListAdapter extends ArrayAdapter {
             LayoutInflater vi = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mView = vi.inflate(id, null);
         }
-        holder.hiveName = (TextView) mView.findViewById(R.id.hiveName);
-        holder.hiveRegion = (TextView) mView.findViewById(R.id.hiveRegion);
+        holder.hiveName = (TextView) mView.findViewById(R.id.hiveName_closest_hive_detail);
+        holder.hiveRegion = (TextView) mView.findViewById(R.id.hiveRegion_closest_hive_detail);
+        holder.hiveStrength = (TextView) mView.findViewById(R.id.strength_closest_hive_detail);
         if (items.get(position) != null) {
 
-            holder.hiveName.setText(String.valueOf(items.get(position).getHiveID()));
-            //holder.hiveName.setTextSize(50);
-            holder.hiveRegion.setText(items.get(position).getHiveRegion());
+            holder.hiveName.setText("Hive Name : " + String.valueOf(items.get(position).getHiveID()));
+            holder.hiveRegion.setText("Hive Region : " + String.valueOf(items.get(position).getHiveRegion()));
+            holder.hiveStrength.setText("Strength : " + String.valueOf(items.get(position).getHiveCount()));
+
 
         }
 
@@ -56,5 +57,6 @@ public class HiveSelectionCustomListAdapter extends ArrayAdapter {
     private class ViewHolder {
         TextView hiveName;
         TextView hiveRegion;
+        TextView hiveStrength;
     }
 }

@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <!-- TODO: Update blank fragment layout -->
                 <TextView
@@ -51,7 +51,8 @@
                     android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="-20dp" />
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"/>
 
             </LinearLayout>
 
@@ -124,7 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:text="Logout"/>
+                android:text="Logout" />
 
 
         </LinearLayout>

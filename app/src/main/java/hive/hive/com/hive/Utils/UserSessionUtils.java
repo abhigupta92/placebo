@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import hive.hive.com.hive.Activities.MainActivity;
+
 import static hive.hive.com.hive.Activities.MainActivity.setLoginScreen;
 
 public class UserSessionUtils {
@@ -97,7 +99,7 @@ public class UserSessionUtils {
         // Clearing all user data from Shared Preferences
         editor.clear();
         editor.commit();
-        setLoginScreen();
+        setLoginScreen(MainActivity.getInstance());
     }
 
 

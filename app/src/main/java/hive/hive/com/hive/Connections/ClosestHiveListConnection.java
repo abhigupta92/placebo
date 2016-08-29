@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,6 +17,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Set;
+
+import hive.hive.com.hive.Activities.MainActivity;
 
 /**
  * Created by abhishekgupta on 17/04/16.
@@ -62,10 +63,10 @@ public class ClosestHiveListConnection extends AsyncTask<Void, Void, JSONArray> 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
                 while ((data = reader.readLine()) != null) {
                     result.append(data);
-                    Log.d("CLOSESTHIVECONNECTION", data);
                 }
+                Log.d("HIVES : ", result.toString());
                 details = new JSONArray(result.toString());
-                Log.d("Details", String.valueOf(details.length()));
+                //Log.d("Details", String.valueOf(details.length()));
                 return details;
             }
 
@@ -96,5 +97,11 @@ public class ClosestHiveListConnection extends AsyncTask<Void, Void, JSONArray> 
         }
 
         return result.toString();
+    }
+
+    @Override
+    protected void onPostExecute(JSONArray jsonArray) {
+        super.onPostExecute(jsonArray);
+        MainActivity.hideLoader();
     }
 }

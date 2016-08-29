@@ -13,6 +13,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Set;
 
+import hive.hive.com.hive.Activities.MainActivity;
+
 /**
  * Created by abhishekgupta on 24/02/16.
  */
@@ -66,4 +68,8 @@ public class GetImageConnection extends AsyncTask<Void, Void, Bitmap> {
         return result.toString();
     }
 
+    @Override
+    protected void onPostExecute(Bitmap bitmap) {
+        MainActivity.hideLoader();
+    }
 }

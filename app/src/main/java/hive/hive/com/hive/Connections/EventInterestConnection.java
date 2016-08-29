@@ -16,6 +16,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import hive.hive.com.hive.Activities.MainActivity;
+
 import static hive.hive.com.hive.Utils.ConnectionUtils.getQuery;
 
 /**
@@ -78,5 +80,11 @@ public class EventInterestConnection extends AsyncTask<Void, Void, Boolean> {
         }
 
         return false;
+    }
+
+    @Override
+    protected void onPostExecute(Boolean aBoolean) {
+        super.onPostExecute(aBoolean);
+        MainActivity.hideLoader();
     }
 }
