@@ -22,9 +22,11 @@ import hive.hive.com.hive.Activities.MainActivity;
 import hive.hive.com.hive.GSONEntities.UserDetails;
 import hive.hive.com.hive.R;
 import hive.hive.com.hive.Utils.ConnectionUtils;
+import hive.hive.com.hive.Utils.LocationUtils;
 import hive.hive.com.hive.Utils.UserSessionUtils;
 
 import static hive.hive.com.hive.Utils.Enums.FACEBOOK_LOGIN;
+import static hive.hive.com.hive.Utils.LocationUtils.locationValue;
 
 
 /**
@@ -153,7 +155,11 @@ public class UserProfileFragment extends Fragment {
         }
 
         if (userDetails != null) {
+            LocationUtils.getCurrentLocation(getActivity(), locationValue);
             userSession.setUserName(userDetails.getUserName());
+            userSession.setClusterId(Long.parseLong(userDetails.getClusterId()));
+            userSession.setHiveId(Long.parseLong(userDetails.getHiveId()));
+
             ConnectionUtils.setUserSessionDetails(userSession.getUserDetails());
             String dob = userDetails.getUserBirthday();
             profilePic.setProfileId(userDetails.getUserId());
@@ -167,6 +173,9 @@ public class UserProfileFragment extends Fragment {
             tvProfileDetails.setText(userDetails.getUserName() + "," + age + "," + userDetails.getUserHomeTown());
             tvProfilePostDetails.setText("Total Posts : " + userDetails.getUserNumOfPosts() + "\n" + "Last Posted : " + userDetails.getUserLastPosted());
 
+        } else {
+            userSession.logoutUser();
+            MainActivity.setLoginScreen(getActivity());
         }
 
     }

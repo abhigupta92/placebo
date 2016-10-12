@@ -31,8 +31,19 @@ public class UserDetails {
     @SerializedName("LASTPOSTED")
     private String userLastPosted;
 
+    @SerializedName("HIVEID")
+    private String hiveId;
 
-    public UserDetails(String userId, String salt, String userName, String userEmail, String userBirthday, String userHomeTown, String userNumOfPosts, String userLastPosted) {
+    @SerializedName("CLUSTERID")
+    private String clusterId;
+
+    @SerializedName("HIVE_LAT")
+    private String hiveLatPos;
+
+    @SerializedName("HIVE_LNG")
+    private String hiveLngPos;
+
+    public UserDetails(String userId, String salt, String userName, String userEmail, String userBirthday, String userHomeTown, String userNumOfPosts, String userLastPosted, String hiveId, String clusterId, String hiveLatPos, String hiveLngPos) {
         this.userId = userId;
         this.salt = salt;
         this.userName = userName;
@@ -41,6 +52,10 @@ public class UserDetails {
         this.userHomeTown = userHomeTown;
         this.userNumOfPosts = userNumOfPosts;
         this.userLastPosted = userLastPosted;
+        this.hiveId = hiveId;
+        this.clusterId = clusterId;
+        this.hiveLatPos = hiveLatPos;
+        this.hiveLngPos = hiveLngPos;
     }
 
     public String getUserId() {
@@ -107,4 +122,35 @@ public class UserDetails {
         this.userLastPosted = userLastPosted;
     }
 
+    public String getHiveId() {
+        return hiveId;
+    }
+
+    public void setHiveId(String hiveId) {
+        this.hiveId = hiveId;
+    }
+
+    public String getClusterId() {
+        return clusterId;
+    }
+
+    public void setClusterId(String clusterId) {
+        this.clusterId = clusterId;
+    }
+
+    public String getHiveLatPos() {
+        return hiveLatPos;
+    }
+
+    public void setHiveLatPos(String hiveLatPos) {
+        this.hiveLatPos = hiveLatPos;
+    }
+
+    public String getHiveLngPos() {
+        return hiveLngPos;
+    }
+
+    public void setHiveLngPos(String hiveLngPos) {
+        this.hiveLngPos = hiveLngPos;
+    }
 }

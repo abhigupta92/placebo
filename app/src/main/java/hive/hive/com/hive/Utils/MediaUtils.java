@@ -1,10 +1,16 @@
 package hive.hive.com.hive.Utils;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 
+import java.io.FileDescriptor;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -53,5 +59,14 @@ public class MediaUtils {
         canvas.drawText("Hive Logo Here !", 10, 50, paint);
 
         return result;
+    }
+
+    public static Bitmap getBitmapFromUri(Uri uri, Activity activity) throws IOException {
+        ParcelFileDescriptor parcelFileDescriptor =
+                activity.getContentResolver().openFileDescriptor(uri, "r");
+        FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+        Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+        parcelFileDescriptor.close();
+        return image;
     }
 }

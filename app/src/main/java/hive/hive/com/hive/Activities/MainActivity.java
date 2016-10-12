@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show();
-                String currentScreen = getActiveFragment();
+                String currentScreen = getActiveFragment(getSupportFragmentManager());
                 Log.d("CURRENT SCREEN", currentScreen);
                 if (currentScreen.contentEquals(EVENTSFRAGMENT.name())) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            String currentScreen = getActiveFragment();
+            String currentScreen = getActiveFragment(getSupportFragmentManager());
             if (currentScreen.contentEquals(EVENTDETAILFRAGMENT.name())) {
                 getFragmentManager().popBackStack();
             } else if (currentScreen.contentEquals(USERPROFILEFRAGMENT.name())) {
@@ -315,18 +315,19 @@ public class MainActivity extends AppCompatActivity
                 }
 
             } else if (id == R.id.user_profile) {
-                showLoader();
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                UserProfileFragment userProfileFragment = (UserProfileFragment) fragmentManager.findFragmentByTag(USERPROFILEFRAGMENT.name());
-                if (userProfileFragment == null) {
-                    Log.d(USERPROFILEFRAGMENT.name(), "Null");
-                    userProfileFragment = new UserProfileFragment();
-                    smoothReplaceFragment(userProfileFragment, fragmentManager);
-                } else {
-                    Log.d(USERPROFILEFRAGMENT.name(), "Not Null");
-                    smoothReplaceFragment(userProfileFragment, fragmentManager);
+                if (!getActiveFragment(getSupportFragmentManager()).contentEquals(USERPROFILEFRAGMENT.name())) {
+                    showLoader();
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    UserProfileFragment userProfileFragment = (UserProfileFragment) fragmentManager.findFragmentByTag(USERPROFILEFRAGMENT.name());
+                    if (userProfileFragment == null) {
+                        Log.d(USERPROFILEFRAGMENT.name(), "Null");
+                        userProfileFragment = new UserProfileFragment();
+                        smoothReplaceFragment(userProfileFragment, fragmentManager);
+                    } else {
+                        Log.d(USERPROFILEFRAGMENT.name(), "Not Null");
+                        smoothReplaceFragment(userProfileFragment, fragmentManager);
+                    }
                 }
-
 
             } else if (id == R.id.hive_events) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
@@ -400,11 +401,11 @@ public class MainActivity extends AppCompatActivity
         return instance;
     }
 
-    public String getActiveFragment() {
-        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+    public static String getActiveFragment(FragmentManager activity) {
+        if (activity.getBackStackEntryCount() == 0) {
             return null;
         }
-        return getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
+        return activity.getBackStackEntryAt(activity.getBackStackEntryCount() - 1).getName();
     }
 
     @Override
@@ -471,4 +472,5 @@ public class MainActivity extends AppCompatActivity
         View view = activity.getCurrentFocus();
         inputMethodManager.showSoftInput(view, 0);
     }
+
 }

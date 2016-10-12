@@ -34,6 +34,7 @@ import hive.hive.com.hive.Connections.LoginUserConnection;
 import hive.hive.com.hive.Connections.PostToHiveConnection;
 import hive.hive.com.hive.Connections.RegisterUserConnection;
 import hive.hive.com.hive.Connections.RegisterUserGeoTagConnection;
+import hive.hive.com.hive.Connections.UploadProfilePicConnection;
 import hive.hive.com.hive.Connections.UserFBDetails;
 import hive.hive.com.hive.Fragments.AllPostsFragment;
 import hive.hive.com.hive.Fragments.EventsFragment;
@@ -130,15 +131,15 @@ public class ConnectionUtils {
 
     /**
      * Used to retrive posts from Hive
-     *
-     * @param applicationContext
+     *  @param applicationContext
+     * @param userId
      * @param start
      * @param end
      */
-    public static List<HivePostDetails> getHivePosts(AllPostsFragment applicationContext, long start, long end) {
+    public static List<HivePostDetails> getHivePosts(AllPostsFragment applicationContext, String userId, long start, long end) {
 
         AsyncTask<Void, Void, JSONArray> allHivePosts;
-        allHivePosts = (new HivePostsConnection(applicationContext, start, end).execute());
+        allHivePosts = (new HivePostsConnection(applicationContext, userId, start, end).execute());
         List<HivePostDetails> hivePosts = new ArrayList<HivePostDetails>();
 
         JSONArray arrayOfPosts = null;
@@ -389,6 +390,23 @@ public class ConnectionUtils {
         }
 
         return result;
+    }
+
+    public static boolean setUserProfilePic(Bitmap bmp) {
+
+        boolean uploaded = false;
+
+        AsyncTask<Void, Void, Boolean> uploadProfilePicTask;
+        uploadProfilePicTask = new UploadProfilePicConnection(bmp).execute();
+
+        try {
+            uploaded = uploadProfilePicTask.get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return uploaded;
+
     }
 
     public static RegisterUserResultDetails registerUser(ContentValues cvRegDetails) {
