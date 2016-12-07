@@ -1,9 +1,17 @@
 package hive.hive.com.hive.Fragments;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -13,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -23,6 +32,8 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -38,26 +49,24 @@ import hive.hive.com.hive.Utils.UserSessionUtils;
 import static hive.hive.com.hive.Utils.Enums.FACEBOOK_LOGIN;
 import static hive.hive.com.hive.Utils.Enums.HIVE_LOGIN;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link EditProfileFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link EditProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class EditProfileFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private static final int REQUEST_IMAGE_CAPTURE = 1888;
+
+    private static final int RESULT_LOAD_IMAGE = 1;
+    private static final int PIC_CROP = 2;
     static UserSessionUtils userSession;
 
     private String mParam1;
     private String mParam2;
     private boolean haveGeoLocationDetails = false;
     EditText etName, etAbout;
+    ImageView imgProfile;
     private String gender;
     Button bSubmit, bLogout;
     public static View view;
@@ -69,6 +78,8 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     private OnFragmentInteractionListener mListener;
 
     PlaceAutocompleteFragment autocompleteFragment;
+
+    CharSequence imageOptions[] = new CharSequence[]{"Take Photo", "Upload Photo"};
 
 
     public EditProfileFragment() {
@@ -176,7 +187,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                         ClosestHiveDetail closestHiveDetail = new ClosestHiveDetail(1, 0, String.valueOf(place.getName()), 0);
                         listOfHives.add(closestHiveDetail);
                     }
-                    if(listOfHives.size() == 1 && listOfHives.get(0).getHiveRegion().contentEquals("notset")){
+                    if (listOfHives.size() == 1 && listOfHives.get(0).getHiveRegion().contentEquals("notset")) {
                         listOfHives.get(0).setHiveRegion(String.valueOf(place.getName()));
                     }
                     AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
@@ -236,6 +247,8 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
         etName = (EditText) view.findViewById(R.id.etProfileName);
         etAbout = (EditText) view.findViewById(R.id.etProfileAbout);
+        imgProfile = (ImageView) view.findViewById(R.id.edit_profile_profile_pic);
+        imgProfile.setOnClickListener(this);
 
         bSubmit = (Button) view.findViewById(R.id.button_edit_profile_submit);
         bSubmit.setOnClickListener(this);
@@ -317,24 +330,183 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                 userSession.logoutUser();
                 break;
 
+            case R.id.edit_profile_profile_pic:
+                final AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
+                builderSingle.setIcon(R.drawable.ic_cast_light);
+                builderSingle.setTitle("Select Method :");
+                builderSingle.setNegativeButton(
+                        "cancel",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                builderSingle.setItems(imageOptions, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                                //takePictureIntent.putExtra("crop", "true");
+                                takePictureIntent.putExtra("aspectX", 1);
+                                takePictureIntent.putExtra("aspectY", 1);
+                                takePictureIntent.putExtra("outputX", 50);
+                                takePictureIntent.putExtra("outputY", 50);
+                                takePictureIntent.putExtra("return-data", true);
+                                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                            }
+                        } else if (which == 1) {
+                            Intent pickImageIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                            pickImageIntent.setType("image/*");
+                            //pickImageIntent.putExtra("crop", "true");
+                            pickImageIntent.putExtra("outputX", 200);
+                            pickImageIntent.putExtra("outputY", 200);
+                            pickImageIntent.putExtra("aspectX", 1);
+                            pickImageIntent.putExtra("aspectY", 1);
+                            pickImageIntent.putExtra("scale", true);
+                            //File profileImgFile = createNewFile("CROP_");
+                            /*try {
+                                profileImgFile.createNewFile();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }*/
+                            /*pickImageIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(profileImgFile));
+                            pickImageIntent.putExtra("outputFormat",
+
+                                    Bitmap.CompressFormat.JPEG.toString());*/
+                            startActivityForResult(pickImageIntent, RESULT_LOAD_IMAGE);
+                        }
+                    }
+                });
+                builderSingle.show();
+                break;
 
 
         }
 
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other layouts.fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == getActivity().RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            //imageBitmap = MediaUtils.addWaterMark(imageBitmap);
+            imgProfile.setImageBitmap(imageBitmap);
+        } else if (requestCode == RESULT_LOAD_IMAGE && resultCode == getActivity().RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+            Cursor cursor = getActivity().getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+
+
+            Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
+            imgProfile.setImageBitmap(bitmap);
+
+            /*Intent intent = new Intent("com.android.camera.action.CROP");
+            Uri imageUri = Uri.fromFile(new File(picturePath));
+            File profileImgFile = createNewFile("CROP_");
+            try {
+                profileImgFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            intent.setDataAndType(imageUri, "image*//*");
+            intent.putExtra("outputX", 200);
+            intent.putExtra("outputY", 200);
+            intent.putExtra("aspectX", 1);
+            intent.putExtra("aspectY", 1);
+            intent.putExtra("scale", true);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(profileImgFile));
+            intent.putExtra("output", Uri.fromFile(profileImgFile));
+            intent.putExtra("return-data",true);
+            PackageManager packageManager = getActivity().getPackageManager();
+            List<ResolveInfo> listGall = packageManager.queryIntentActivities(intent, 0);
+            Intent cropIntent = null;
+            for (ResolveInfo res : listGall) {
+                cropIntent = new Intent(intent);
+                cropIntent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+                break;
+            }
+            startActivityForResult(cropIntent, PIC_CROP);*/
+        } else if (requestCode == PIC_CROP) {
+            if (resultCode == Activity.RESULT_OK) {
+                Bundle extras = data.getExtras();
+                Bitmap selectedBitmap = extras.getParcelable("data");
+                // Set The Bitmap Data To ImageView
+                imgProfile.setImageBitmap(selectedBitmap);
+                imgProfile.setScaleType(ImageView.ScaleType.FIT_XY);
+                //boolean uploadedProfilePic = ConnectionUtils.setUserProfilePic(selectedBitmap);
+            }
+        }
+
+
+    }
+
+    private void performCrop(String picUri) {
+        try {
+            //Start Crop Activity
+
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            cropIntent.setClassName("com.android.camera", "com.android.camera.CropImage");
+            // indicate image type and Uri
+            File f = new File(picUri);
+            Uri contentUri = Uri.fromFile(f);
+
+            cropIntent.setDataAndType(contentUri, "image/*");
+            // set crop properties
+            cropIntent.putExtra("crop", "true");
+            // indicate aspect of desired crop
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            // indicate output X and Y
+            cropIntent.putExtra("outputX", 280);
+            cropIntent.putExtra("outputY", 280);
+            // retrieve data on return
+            cropIntent.putExtra("return-data", true);
+            // start the activity - we handle returning in onActivityResult
+            startActivityForResult(cropIntent, PIC_CROP);
+        }
+        // respond to users whose devices do not support the crop action
+        catch (ActivityNotFoundException anfe) {
+
+        }
+    }
+
+    private File createNewFile(String prefix) {
+        if (prefix == null || "".equalsIgnoreCase(prefix)) {
+            prefix = "IMG_";
+        }
+        File newDirectory = new File(Environment.getExternalStorageDirectory() + "/hive_pics/");
+        if (!newDirectory.exists()) {
+            if (newDirectory.mkdir()) {
+                Log.d("File created", "File Created");
+            }
+        }
+        File file = new File(newDirectory, (prefix + System.currentTimeMillis() + ".jpg"));
+        if (file.exists()) {
+            //this wont be executed
+            file.delete();
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return file;
+    }
+
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

@@ -10,7 +10,11 @@ import android.content.SharedPreferences.Editor;
 
 import hive.hive.com.hive.Activities.MainActivity;
 
+import static hive.hive.com.hive.Activities.MainActivity.getInstance;
 import static hive.hive.com.hive.Activities.MainActivity.setLoginScreen;
+import static hive.hive.com.hive.Utils.LocationUtils.getLatitude;
+import static hive.hive.com.hive.Utils.LocationUtils.getLongitude;
+import static hive.hive.com.hive.Utils.LocationUtils.locationValue;
 
 public class UserSessionUtils {
     // Shared Preferences reference
@@ -36,6 +40,12 @@ public class UserSessionUtils {
     public static final String KEY_SALT = "SALT";
 
     public static final String KEY_LOGIN_TYPE = "LOGIN_TYPE";
+
+    private long HIVE_ID;
+
+    private long CLUSTER_ID;
+
+    private double LATITUDE,LONGITUDE;
 
     private String userName;
 
@@ -76,6 +86,21 @@ public class UserSessionUtils {
         return false;
     }
 
+    public long getHiveId() {
+        return HIVE_ID;
+    }
+
+    public long getClusterId() {
+        return CLUSTER_ID;
+    }
+
+    public void setHiveId(long keyHiveId) {
+        HIVE_ID = keyHiveId;
+    }
+
+    public void setClusterId(long keyClusterId) {
+        CLUSTER_ID = keyClusterId;
+    }
 
     /**
      * Get stored session data
@@ -87,6 +112,10 @@ public class UserSessionUtils {
         userDetails.setKEY_SALT(pref.getString(KEY_SALT, null));
         userDetails.setKEY_LOGIN_TYPE(String.valueOf(pref.getLong(KEY_LOGIN_TYPE, 0)));
         userDetails.setKEY_USERNAME(String.valueOf(this.userName));
+        userDetails.setCLUSTER_ID(this.CLUSTER_ID);
+        userDetails.setHIVE_ID(this.HIVE_ID);
+        userDetails.setLATITUDE(this.LATITUDE);
+        userDetails.setLONGITUDE(this.LONGITUDE);
 
         return userDetails;
     }
@@ -122,16 +151,23 @@ public class UserSessionUtils {
         String KEY_PASSWORD;
         String KEY_SALT;
         String KEY_LOGIN_TYPE;
+        long HIVE_ID;
+        long CLUSTER_ID;
+        double LATITUDE,LONGITUDE;
 
         public UserSessionDetails() {
         }
 
-        public UserSessionDetails(String KEY_USERID, String KEY_USERNAME, String KEY_PASSWORD, String KEY_SALT, String KEY_LOGIN_TYPE) {
+        public UserSessionDetails(String KEY_USERID, String KEY_USERNAME, String KEY_PASSWORD, String KEY_SALT, String KEY_LOGIN_TYPE, long HIVE_ID, long CLUSTER_ID, double LATITUDE, double LONGITUDE) {
             this.KEY_USERID = KEY_USERID;
             this.KEY_USERNAME = KEY_USERNAME;
             this.KEY_PASSWORD = KEY_PASSWORD;
             this.KEY_SALT = KEY_SALT;
             this.KEY_LOGIN_TYPE = KEY_LOGIN_TYPE;
+            this.HIVE_ID = HIVE_ID;
+            this.CLUSTER_ID = CLUSTER_ID;
+            this.LATITUDE = LATITUDE;
+            this.LONGITUDE = LONGITUDE;
         }
 
         public String getKEY_USERID() {
@@ -140,6 +176,14 @@ public class UserSessionUtils {
 
         public void setKEY_USERID(String KEY_USERID) {
             this.KEY_USERID = KEY_USERID;
+        }
+
+        public String getKEY_USERNAME() {
+            return KEY_USERNAME;
+        }
+
+        public void setKEY_USERNAME(String KEY_USERNAME) {
+            this.KEY_USERNAME = KEY_USERNAME;
         }
 
         public String getKEY_PASSWORD() {
@@ -166,12 +210,44 @@ public class UserSessionUtils {
             this.KEY_LOGIN_TYPE = KEY_LOGIN_TYPE;
         }
 
-        public String getKEY_USERNAME() {
-            return KEY_USERNAME;
+        public long getHIVE_ID() {
+            return HIVE_ID;
         }
 
-        public void setKEY_USERNAME(String KEY_USERNAME) {
-            this.KEY_USERNAME = KEY_USERNAME;
+        public void setHIVE_ID(long HIVE_ID) {
+            this.HIVE_ID = HIVE_ID;
+        }
+
+        public long getCLUSTER_ID() {
+            return CLUSTER_ID;
+        }
+
+        public void setCLUSTER_ID(long CLUSTER_ID) {
+            this.CLUSTER_ID = CLUSTER_ID;
+        }
+
+        public double getLATITUDE() {
+            if (LATITUDE == 0.0){
+                LocationUtils.getCurrentLocation(getInstance(),locationValue);
+                LATITUDE = getLatitude();
+            }
+            return LATITUDE;
+        }
+
+        public void setLATITUDE(double LATITUDE) {
+            this.LATITUDE = LATITUDE;
+        }
+
+        public double getLONGITUDE() {
+            if (LONGITUDE == 0.0){
+                LocationUtils.getCurrentLocation(getInstance(),locationValue);
+                LONGITUDE = getLongitude();
+            }
+            return LONGITUDE;
+        }
+
+        public void setLONGITUDE(double LONGITUDE) {
+            this.LONGITUDE = LONGITUDE;
         }
     }
 
