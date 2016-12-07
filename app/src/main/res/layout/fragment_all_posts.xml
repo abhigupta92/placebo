@@ -5,9 +5,27 @@
     tools:context=".Fragments.AllPostsFragment">
 
     <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/posts_map"
+        android:visibility="invisible">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/switchView2"/>
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:id="@+id/hive_posts_map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/screen_list">
+        android:id="@+id/posts_list">
 
         <ListView
             android:layout_width="wrap_content"
@@ -15,6 +33,12 @@
             android:id="@+id/listViewHivePosts"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="40dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/switchView"
+            android:text="SWITCH VIEW LAH"/>
 
     </RelativeLayout>
 

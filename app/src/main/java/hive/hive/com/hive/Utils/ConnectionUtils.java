@@ -29,6 +29,7 @@ import hive.hive.com.hive.Connections.GetEventDetailsConnection;
 import hive.hive.com.hive.Connections.GetGeoLocationDetailsConnection;
 import hive.hive.com.hive.Connections.GetUserSettingsConnection;
 import hive.hive.com.hive.Connections.HivePostsConnection;
+import hive.hive.com.hive.Connections.HivesOnMapConnection;
 import hive.hive.com.hive.Connections.LikePostConnection;
 import hive.hive.com.hive.Connections.LoginUserConnection;
 import hive.hive.com.hive.Connections.PostToHiveConnection;
@@ -41,6 +42,7 @@ import hive.hive.com.hive.Fragments.EventsFragment;
 import hive.hive.com.hive.GSONEntities.ClosestHiveDetail;
 import hive.hive.com.hive.GSONEntities.EventDetails;
 import hive.hive.com.hive.GSONEntities.EventListDetails;
+import hive.hive.com.hive.GSONEntities.HiveOnMapDtl;
 import hive.hive.com.hive.GSONEntities.HivePostDetails;
 import hive.hive.com.hive.GSONEntities.UserDetails;
 import hive.hive.com.hive.GSONEntities.UserSettingsDetails;
@@ -131,7 +133,8 @@ public class ConnectionUtils {
 
     /**
      * Used to retrive posts from Hive
-     *  @param applicationContext
+     *
+     * @param applicationContext
      * @param userId
      * @param start
      * @param end
@@ -392,6 +395,30 @@ public class ConnectionUtils {
         return result;
     }
 
+    public static ArrayList<HiveOnMapDtl> getHivesOnMap(ContentValues contentValues) {
+        AsyncTask<Void, Void, JSONArray> hiveCoordsConn;
+        contentValues.put("USER_ID", userSessionDetails.getKEY_USERID());
+        hiveCoordsConn = new HivesOnMapConnection(contentValues).execute();
+        JSONArray hiveCoordArray = null;
+
+        ArrayList<HiveOnMapDtl> hivesOnMapCoords = null;
+
+        try {
+            hiveCoordArray = hiveCoordsConn.get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (hiveCoordArray != null) {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<List<HiveOnMapDtl>>() {
+            }.getType();
+            hivesOnMapCoords = gson.fromJson(hiveCoordArray.toString(), listType);
+        }
+
+        return hivesOnMapCoords;
+    }
+
     public static boolean setUserProfilePic(Bitmap bmp) {
 
         boolean uploaded = false;
@@ -480,4 +507,5 @@ public class ConnectionUtils {
     public static void setUserSessionDetails(UserSessionUtils.UserSessionDetails userSessionDetails) {
         ConnectionUtils.userSessionDetails = userSessionDetails;
     }
+
 }

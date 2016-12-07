@@ -30,6 +30,8 @@ import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 
 import hive.hive.com.hive.Dialog.CreateEventDialog;
+import hive.hive.com.hive.Dialog.CreatePostDialog;
+import hive.hive.com.hive.Dialog.SelectionDialog;
 import hive.hive.com.hive.Fragments.AllPostsFragment;
 import hive.hive.com.hive.Fragments.CreatePostFragment;
 import hive.hive.com.hive.Fragments.EditProfileFragment;
@@ -46,6 +48,7 @@ import hive.hive.com.hive.Utils.UserSessionUtils;
 
 import static hive.hive.com.hive.Utils.Enums.ALLPOSTSFRAGMENT;
 import static hive.hive.com.hive.Utils.Enums.CREATEEVENTDIALOG;
+import static hive.hive.com.hive.Utils.Enums.CREATEPOSTDIALOG;
 import static hive.hive.com.hive.Utils.Enums.CREATEPOSTFRAGMENT;
 import static hive.hive.com.hive.Utils.Enums.EDITPROFILEFRAGMENT;
 import static hive.hive.com.hive.Utils.Enums.EVENTDETAILFRAGMENT;
@@ -54,6 +57,7 @@ import static hive.hive.com.hive.Utils.Enums.FACEBOOK_LOGIN;
 import static hive.hive.com.hive.Utils.Enums.HIVE_LOGIN;
 import static hive.hive.com.hive.Utils.Enums.LOGINFRAGMENT;
 import static hive.hive.com.hive.Utils.Enums.REGISTRATIONFRAGMENT;
+import static hive.hive.com.hive.Utils.Enums.SELECTIONDIALOG;
 import static hive.hive.com.hive.Utils.Enums.USERPROFILEFRAGMENT;
 import static hive.hive.com.hive.Utils.FacebookUtils.setLoggedInStatus;
 
@@ -61,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, UserProfileFragment.OnFragmentInteractionListener, LoginFragment.OnFragmentInteractionListener,
         CreatePostFragment.OnFragmentInteractionListener, AllPostsFragment.OnFragmentInteractionListener, EditProfileFragment.OnFragmentInteractionListener,
         CreateEventDialog.CreateEventDialogListener, EventsFragment.OnFragmentInteractionListener, EventDetailFragment.OnFragmentInteractionListener,
-        RegistrationFragment.OnFragmentInteractionListener {
+        RegistrationFragment.OnFragmentInteractionListener, SelectionDialog.SelectionDialogListener, CreatePostDialog.CreatePostDialogListener {
 
     static UserSessionUtils userSession;
 
@@ -219,10 +223,18 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
+                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();*/
                 String currentScreen = getActiveFragment(getSupportFragmentManager());
                 Log.d("CURRENT SCREEN", currentScreen);
+                if (currentScreen.contentEquals(ALLPOSTSFRAGMENT.name())) {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    SelectionDialog selectionDialog = (SelectionDialog) fragmentManager.findFragmentByTag(SELECTIONDIALOG.name());
+                    FragmentManager fm = getSupportFragmentManager();
+                    if (selectionDialog == null)
+                        selectionDialog = new SelectionDialog();
+                    selectionDialog.show(fm, SELECTIONDIALOG.name());
+                }
                 if (currentScreen.contentEquals(EVENTSFRAGMENT.name())) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     CreateEventDialog createEventDialog = (CreateEventDialog) fragmentManager.findFragmentByTag(CREATEEVENTDIALOG.name());
@@ -408,28 +420,6 @@ public class MainActivity extends AppCompatActivity
         return activity.getBackStackEntryAt(activity.getBackStackEntryCount() - 1).getName();
     }
 
-    @Override
-    public void OnFinishCreateEventDialog() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(CREATEEVENTDIALOG.name());
-        if (fragment != null) {
-            DialogFragment dialogFragment = (DialogFragment) fragment;
-            dialogFragment.dismiss();
-        }
-        Snackbar.make(getCurrentFocus(), "Event was created !", Snackbar.LENGTH_SHORT)
-                .setAction("Action", null).show();
-    }
-
-    @Override
-    public void OnErrorCreateEventErrorDialog() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(CREATEEVENTDIALOG.name());
-        if (fragment != null) {
-            DialogFragment dialogFragment = (DialogFragment) fragment;
-            dialogFragment.dismiss();
-        }
-        Snackbar.make(getCurrentFocus(), "Some Error has occured with the server !... Please try again later !", Snackbar.LENGTH_SHORT)
-                .setAction("Action", null).show();
-    }
-
 
     private final static Handler mDrawerHandler = new Handler();
 
@@ -473,4 +463,82 @@ public class MainActivity extends AppCompatActivity
         inputMethodManager.showSoftInput(view, 0);
     }
 
+    @Override
+    public void OnFinishCreateEventDialog() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(CREATEEVENTDIALOG.name());
+        if (fragment != null) {
+            DialogFragment dialogFragment = (DialogFragment) fragment;
+            dialogFragment.dismiss();
+        }
+        Snackbar.make(getCurrentFocus(), "Event was created !", Snackbar.LENGTH_SHORT)
+                .setAction("Action", null).show();
+    }
+
+    @Override
+    public void OnErrorCreateEventErrorDialog() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(CREATEEVENTDIALOG.name());
+        if (fragment != null) {
+            DialogFragment dialogFragment = (DialogFragment) fragment;
+            dialogFragment.dismiss();
+        }
+        Snackbar.make(getCurrentFocus(), "Some Error has occured with the server !... Please try again later !", Snackbar.LENGTH_SHORT)
+                .setAction("Action", null).show();
+    }
+
+    @Override
+    public void onCreateEventSelected() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(SELECTIONDIALOG.name());
+        if (fragment != null) {
+            SelectionDialog selectionDialog = (SelectionDialog) fragment;
+            selectionDialog.dismiss();
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            CreateEventDialog createEventDialog = (CreateEventDialog) fragmentManager.findFragmentByTag(CREATEEVENTDIALOG.name());
+            Log.d(EVENTSFRAGMENT.name(), "Current screen");
+            FragmentManager fm = getSupportFragmentManager();
+            if (createEventDialog == null)
+                createEventDialog = new CreateEventDialog();
+            createEventDialog.show(fm, CREATEEVENTDIALOG.name());
+        }
+
+    }
+
+    @Override
+    public void onShareViewSelected() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(SELECTIONDIALOG.name());
+        if (fragment != null) {
+            SelectionDialog selectionDialog = (SelectionDialog) fragment;
+            selectionDialog.dismiss();
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            CreatePostDialog createPostDialog = (CreatePostDialog) fragmentManager.findFragmentByTag(CREATEPOSTDIALOG.name());
+            //Log.d(EVENTSFRAGMENT.name(), "Current screen");
+            FragmentManager fm = getSupportFragmentManager();
+            if (createPostDialog == null)
+                createPostDialog = new CreatePostDialog();
+            createPostDialog.show(fm, CREATEPOSTDIALOG.name());
+        }
+    }
+
+    @Override
+    public void onPostCreated() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(CREATEPOSTDIALOG.name());
+        if (fragment != null) {
+            DialogFragment dialogFragment = (DialogFragment) fragment;
+            dialogFragment.dismiss();
+        }
+        Snackbar.make(getCurrentFocus(), "Posted to Hive !", Snackbar.LENGTH_SHORT)
+                .setAction("Action", null).show();
+    }
+
+    @Override
+    public void onPostConnectionErrors() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(CREATEPOSTDIALOG.name());
+        if (fragment != null) {
+            DialogFragment dialogFragment = (DialogFragment) fragment;
+            dialogFragment.dismiss();
+        }
+        Snackbar.make(getCurrentFocus(), "Unable to Post, Please Try Again Later !", Snackbar.LENGTH_SHORT)
+                .setAction("Action", null).show();
+    }
 }

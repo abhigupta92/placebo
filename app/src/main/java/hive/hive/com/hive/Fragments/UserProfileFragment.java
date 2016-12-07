@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import hive.hive.com.hive.Activities.MainActivity;
 import hive.hive.com.hive.GSONEntities.UserDetails;
 import hive.hive.com.hive.R;
 import hive.hive.com.hive.Utils.ConnectionUtils;
+import hive.hive.com.hive.Utils.Enums;
 import hive.hive.com.hive.Utils.LocationUtils;
 import hive.hive.com.hive.Utils.UserSessionUtils;
 
@@ -159,6 +161,8 @@ public class UserProfileFragment extends Fragment {
             userSession.setUserName(userDetails.getUserName());
             userSession.setClusterId(Long.parseLong(userDetails.getClusterId()));
             userSession.setHiveId(Long.parseLong(userDetails.getHiveId()));
+            userSession.setLATITUDE(Double.parseDouble(userDetails.getHiveLatPos()));
+            userSession.setLONGITUDE(Double.parseDouble(userDetails.getHiveLngPos()));
 
             ConnectionUtils.setUserSessionDetails(userSession.getUserDetails());
             String dob = userDetails.getUserBirthday();
@@ -172,6 +176,12 @@ public class UserProfileFragment extends Fragment {
             int age = getAge(date);
             tvProfileDetails.setText(userDetails.getUserName() + "," + age + "," + userDetails.getUserHomeTown());
             tvProfilePostDetails.setText("Total Posts : " + userDetails.getUserNumOfPosts() + "\n" + "Last Posted : " + userDetails.getUserLastPosted());
+
+            AllPostsFragment allPostsFragment = new AllPostsFragment();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, allPostsFragment, String.valueOf(Enums.ALLPOSTSFRAGMENT));
+            transaction.addToBackStack(String.valueOf(Enums.ALLPOSTSFRAGMENT));
+            transaction.commit();
 
         } else {
             userSession.logoutUser();

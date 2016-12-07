@@ -78,7 +78,7 @@ public class CreateEventDialog extends DialogFragment implements View.OnClickLis
         /* map is already there, just return view as it is */
         }
 
-        getDialog().setTitle("Hello");
+        getDialog().setTitle("Create Event");
 
         initializeViews(view);
 

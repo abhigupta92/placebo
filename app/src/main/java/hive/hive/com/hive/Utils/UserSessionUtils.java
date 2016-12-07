@@ -45,7 +45,7 @@ public class UserSessionUtils {
 
     private long CLUSTER_ID;
 
-    private double LATITUDE,LONGITUDE;
+    private double LATITUDE, LONGITUDE;
 
     private String userName;
 
@@ -153,7 +153,7 @@ public class UserSessionUtils {
         String KEY_LOGIN_TYPE;
         long HIVE_ID;
         long CLUSTER_ID;
-        double LATITUDE,LONGITUDE;
+        double LATITUDE, LONGITUDE;
 
         public UserSessionDetails() {
         }
@@ -227,8 +227,8 @@ public class UserSessionUtils {
         }
 
         public double getLATITUDE() {
-            if (LATITUDE == 0.0){
-                LocationUtils.getCurrentLocation(getInstance(),locationValue);
+            if (LATITUDE == 0.0) {
+                LocationUtils.getCurrentLocation(getInstance(), locationValue);
                 LATITUDE = getLatitude();
             }
             return LATITUDE;
@@ -239,8 +239,8 @@ public class UserSessionUtils {
         }
 
         public double getLONGITUDE() {
-            if (LONGITUDE == 0.0){
-                LocationUtils.getCurrentLocation(getInstance(),locationValue);
+            if (LONGITUDE == 0.0) {
+                LocationUtils.getCurrentLocation(getInstance(), locationValue);
                 LONGITUDE = getLongitude();
             }
             return LONGITUDE;
@@ -257,5 +257,21 @@ public class UserSessionUtils {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public double getLATITUDE() {
+        return LATITUDE;
+    }
+
+    public void setLATITUDE(double LATITUDE) {
+        this.LATITUDE = LATITUDE;
+    }
+
+    public double getLONGITUDE() {
+        return LONGITUDE;
+    }
+
+    public void setLONGITUDE(double LONGITUDE) {
+        this.LONGITUDE = LONGITUDE;
     }
 }

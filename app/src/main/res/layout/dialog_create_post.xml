@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/img_view_dialog_create_post"
+            android:layout_width="match_parent"
+            android:layout_height="170dp" />
+
+        <Spinner
+            android:id="@+id/spinnerCategory_dialog_create_post"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:entries="@array/categories">
+
+        </Spinner>
+
+        <EditText
+            android:id="@+id/etTitle_dialog_create_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Title :" />
+
+        <EditText
+            android:id="@+id/etContent_dialog_create_post"
+            android:layout_width="match_parent"
+            android:layout_height="195dp"
+            android:hint="Write your story" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/bSubmit_dialog_create_post"
+            android:layout_marginTop="-10dp"
+            android:text="Post To Hive"/>
+
+    </LinearLayout>
+
+</ScrollView>

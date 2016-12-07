@@ -172,7 +172,6 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                 // TODO: Get info about the selected place.
                 String placeID = place.getId();
 
-
                 try {
                     haveGeoLocationDetails = ConnectionUtils.getSelectedGeolocationDetails(placeID, place.getLatLng(), String.valueOf(place.getName()));
                 } catch (ExecutionException e) {

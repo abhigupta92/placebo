@@ -24,10 +24,12 @@ import hive.hive.com.hive.Fragments.AllPostsFragment;
 public class HivePostsConnection extends AsyncTask<Void, Void, JSONArray> {
 
     public static long start, end;
+    String userId;
 
-    public HivePostsConnection(AllPostsFragment context, long start, long end) {
+    public HivePostsConnection(AllPostsFragment context, String userId, long start, long end) {
         this.start = start;
         this.end = end;
+        this.userId = userId;
     }
 
     @Override
@@ -55,6 +57,10 @@ public class HivePostsConnection extends AsyncTask<Void, Void, JSONArray> {
             posts.append(URLEncoder.encode("end", "UTF-8"));
             posts.append("=");
             posts.append(URLEncoder.encode(String.valueOf(end), "UTF-8"));
+            posts.append("&");
+            posts.append(URLEncoder.encode("userId", "UTF-8"));
+            posts.append("=");
+            posts.append(URLEncoder.encode(String.valueOf(userId), "UTF-8"));
             writer.write(posts.toString());
 
             Log.d("URLQUERY", posts.toString());

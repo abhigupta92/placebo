@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +24,13 @@ import java.io.ByteArrayOutputStream;
 import hive.hive.com.hive.Activities.MainActivity;
 import hive.hive.com.hive.R;
 import hive.hive.com.hive.Utils.ConnectionUtils;
+import hive.hive.com.hive.Utils.LocationUtils;
 import hive.hive.com.hive.Utils.MediaUtils;
 import hive.hive.com.hive.Utils.UserSessionUtils;
+
+import static hive.hive.com.hive.Utils.LocationUtils.getLatitude;
+import static hive.hive.com.hive.Utils.LocationUtils.getLongitude;
+import static hive.hive.com.hive.Utils.LocationUtils.locationValue;
 
 
 /**
@@ -50,7 +56,7 @@ public class CreatePostFragment extends Fragment implements View.OnClickListener
     UserSessionUtils userSession;
 
     ImageView imgView;
-    EditText etTitle,etContent;
+    EditText etTitle, etContent;
     Spinner spCategory;
     Button bSubmit;
 
@@ -91,7 +97,7 @@ public class CreatePostFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_create_post, container, false);
+        View view = inflater.inflate(R.layout.fragment_create_post, container, false);
 
         userSession = MainActivity.getUserSession();
         initialiseViews(view);
@@ -139,14 +145,16 @@ public class CreatePostFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.bSubmit_create_post:
 
-                Bitmap bitmap = ((BitmapDrawable)imgView.getDrawable()).getBitmap();
+                LocationUtils.getCurrentLocation(getActivity(), locationValue);
+                Log.d("LOCATION : ", getLatitude() + " : " + getLongitude());
+
+                Bitmap bitmap = ((BitmapDrawable) imgView.getDrawable()).getBitmap();
                 ByteArrayOutputStream bao = new ByteArrayOutputStream();
 
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bao);
-                byte [] ba = bao.toByteArray();
 
                 ContentValues contentValues = new ContentValues();
                 contentValues.put("profileID", userSession.getUserId());
@@ -159,9 +167,9 @@ public class CreatePostFragment extends Fragment implements View.OnClickListener
 
                 boolean postSuccess = ConnectionUtils.postToHive(contentValues);
 
-                if(postSuccess){
+                if (postSuccess) {
                     Toast.makeText(getContext(), "Posted To Hive !", Toast.LENGTH_LONG).show();
-                }else{
+                } else {
                     Toast.makeText(getContext(), "Sorry ! Something Went Wrong :| ! Try Again Maybe ? :)", Toast.LENGTH_LONG).show();
                 }
                 break;
@@ -176,18 +184,7 @@ public class CreatePostFragment extends Fragment implements View.OnClickListener
 
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other layouts.fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 

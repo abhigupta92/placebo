@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="110dp"
+    android:layout_height="110dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/clusterName_hive_info_window"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="#00000000"
+            android:padding="10dp"
+            android:text="Cluster : "
+            android:textColor="#FF0000" />
+
+
+        <TextView
+            android:id="@+id/hiveName_hive_info_window"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/clusterName_hive_info_window"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="5dp"
+            android:background="#00000000"
+            android:padding="10dp"
+            android:text="Hive : "
+            android:textColor="#FF0000" />
+    </RelativeLayout>
+</LinearLayout>
