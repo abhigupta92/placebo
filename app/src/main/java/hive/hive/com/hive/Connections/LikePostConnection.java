@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -20,6 +19,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Set;
+
+import hive.hive.com.hive.Activities.MainActivity;
 
 /**
  * Created by abhishekgupta on 06/04/16.
@@ -103,4 +104,8 @@ public class LikePostConnection extends AsyncTask<Void, Void, JSONObject> {
         return result.toString();
     }
 
+    @Override
+    protected void onPostExecute(JSONObject jsonObject) {
+        MainActivity.hideLoader();
+    }
 }

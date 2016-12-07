@@ -16,6 +16,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Set;
 
+import hive.hive.com.hive.Activities.MainActivity;
+
 /**
  * Created by abhishekgupta on 12/03/16.
  */
@@ -31,7 +33,7 @@ public class RegisterUserGeoTagConnection extends AsyncTask<Void, Void, Boolean>
     protected Boolean doInBackground(Void... params) {
 
         try {
-            URL url = new URL("http://abhishek.activexenon.com/hive/newsfeed_register_geolocation.php");
+            URL url = new URL("http://abhishek.activexenon.com/hive/hive_update_user_settings.php");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(10000);
             conn.setConnectTimeout(15000);
@@ -100,5 +102,11 @@ public class RegisterUserGeoTagConnection extends AsyncTask<Void, Void, Boolean>
         }
 
         return result.toString();
+    }
+
+    @Override
+    protected void onPostExecute(Boolean aBoolean) {
+        super.onPostExecute(aBoolean);
+        MainActivity.hideLoader();
     }
 }

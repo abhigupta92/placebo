@@ -36,14 +36,13 @@ import hive.hive.com.hive.ConnectionResults.LoginUserResultDetail;
 import hive.hive.com.hive.ConnectionResults.RegisterUserResultDetails;
 import hive.hive.com.hive.R;
 import hive.hive.com.hive.Utils.ConnectionUtils;
-import hive.hive.com.hive.Utils.Enums;
 import hive.hive.com.hive.Utils.FacebookUtils;
 import hive.hive.com.hive.Utils.StringUtils;
 import hive.hive.com.hive.Utils.UserSessionUtils;
 
 import static hive.hive.com.hive.Utils.Enums.FACEBOOK_LOGIN;
 import static hive.hive.com.hive.Utils.Enums.HIVE_LOGIN;
-import static hive.hive.com.hive.Utils.Enums.USERPROFILEFRAGMENT;
+import static hive.hive.com.hive.Utils.Enums.REGISTRATIONFRAGMENT;
 import static hive.hive.com.hive.Utils.FacebookUtils.setLoggedInStatus;
 
 /**
@@ -165,11 +164,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                                         session.createUserLoginSession(object.getString("id"), salt, Long.parseLong(FACEBOOK_LOGIN.getVal()));
                                         FacebookUtils.setProfileId(object.getString("id"));
                                         setLoggedInStatus(AccessToken.getCurrentAccessToken());
+                                        MainActivity.showLoader();
                                         UserProfileFragment userProfileFragment = new UserProfileFragment();
-                                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                                        fragmentTransaction.replace(R.id.fragment_container, userProfileFragment, USERPROFILEFRAGMENT.name());
-                                        fragmentTransaction.addToBackStack(USERPROFILEFRAGMENT.name());
-                                        fragmentTransaction.commit();
+                                        MainActivity.smoothReplaceFragment(userProfileFragment, getActivity().getSupportFragmentManager());
                                     }
 
                                 } catch (JSONException e) {
@@ -207,7 +204,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         etEmail = (EditText) view.findViewById(R.id.etEmail_login);
         etPassword = (EditText) view.findViewById(R.id.etPassword_login);
 
-        MainActivity.showSoftKeyboard(getActivity());
+        MainActivity.hideSoftKeyboard(getActivity());
     }
 
     @Override
@@ -247,7 +244,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             case R.id.bRegister_login:
                 RegistrationFragment registrationFragment = new RegistrationFragment();
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, registrationFragment);
+                fragmentTransaction.replace(R.id.fragment_container, registrationFragment, REGISTRATIONFRAGMENT.name());
+                fragmentTransaction.addToBackStack(REGISTRATIONFRAGMENT.name());
                 fragmentTransaction.commit();
                 break;
 
@@ -263,10 +261,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                         UserSessionUtils userSession = MainActivity.getUserSession();
                         userSession.createUserLoginSession(loginRes.getUserId(), loginRes.getSalt(), Long.valueOf(HIVE_LOGIN.getVal()));
                         UserProfileFragment userProfileFragment = new UserProfileFragment();
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_container, userProfileFragment, Enums.USERPROFILEFRAGMENT.name());
-                        transaction.addToBackStack(USERPROFILEFRAGMENT.name());
-                        transaction.commit();
+                        MainActivity.showLoader();
+                        MainActivity.smoothReplaceFragment(userProfileFragment, getActivity().getSupportFragmentManager());
                     } else if (loginRes.getResult().contentEquals(LOGIN_RESULT_FAIL)) {
                         Snackbar.make(getActivity().getCurrentFocus(), loginRes.getErrMsg(), Snackbar.LENGTH_SHORT)
                                 .setAction("Action", null).show();

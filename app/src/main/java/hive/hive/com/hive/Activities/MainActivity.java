@@ -5,11 +5,13 @@ import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -47,9 +49,11 @@ import static hive.hive.com.hive.Utils.Enums.CREATEEVENTDIALOG;
 import static hive.hive.com.hive.Utils.Enums.CREATEPOSTFRAGMENT;
 import static hive.hive.com.hive.Utils.Enums.EDITPROFILEFRAGMENT;
 import static hive.hive.com.hive.Utils.Enums.EVENTDETAILFRAGMENT;
-import static hive.hive.com.hive.Utils.Enums.EVENTSFRAGMENTS;
+import static hive.hive.com.hive.Utils.Enums.EVENTSFRAGMENT;
 import static hive.hive.com.hive.Utils.Enums.FACEBOOK_LOGIN;
 import static hive.hive.com.hive.Utils.Enums.HIVE_LOGIN;
+import static hive.hive.com.hive.Utils.Enums.LOGINFRAGMENT;
+import static hive.hive.com.hive.Utils.Enums.REGISTRATIONFRAGMENT;
 import static hive.hive.com.hive.Utils.Enums.USERPROFILEFRAGMENT;
 import static hive.hive.com.hive.Utils.FacebookUtils.setLoggedInStatus;
 
@@ -102,7 +106,7 @@ public class MainActivity extends AppCompatActivity
                     transaction.addToBackStack(String.valueOf(Enums.USERPROFILEFRAGMENT));
                     transaction.commit();
                 } else {
-                    setLoginScreen();
+                    setLoginScreen(this);
                 }
             } else if (userSessionDetails.getKEY_LOGIN_TYPE() == HIVE_LOGIN.getVal()) {
                 UserProfileFragment userProfileFragment = new UserProfileFragment();
@@ -112,7 +116,7 @@ public class MainActivity extends AppCompatActivity
                 transaction.commit();
             }
         } else {
-            setLoginScreen();
+            setLoginScreen(this);
         }
     }
 
@@ -165,12 +169,22 @@ public class MainActivity extends AppCompatActivity
     /**
      * Used to set login screen because facebook login has not been done.
      */
-    public static void setLoginScreen() {
-        LoginFragment loginFragment = new LoginFragment();
-        FragmentTransaction transaction = getInstance().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, loginFragment, String.valueOf(Enums.LOGINFRAGMENT));
-        transaction.addToBackStack(String.valueOf(Enums.LOGINFRAGMENT));
-        transaction.commit();
+    public static void setLoginScreen(FragmentActivity activity) {
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+        LoginFragment loginFragment = (LoginFragment) fragmentManager.findFragmentByTag(LOGINFRAGMENT.name());
+        if (loginFragment == null) {
+            Log.d(LOGINFRAGMENT.name(), "Null");
+            loginFragment = new LoginFragment();
+            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, loginFragment, LOGINFRAGMENT.name());
+            transaction.addToBackStack(LOGINFRAGMENT.name());
+            transaction.commit();
+        } else {
+            Log.d(LOGINFRAGMENT.name(), "Not Null");
+            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, loginFragment, LOGINFRAGMENT.name());
+            transaction.commit();
+        }
     }
 
     /**
@@ -195,7 +209,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         progDailog = new ProgressDialog(this);
-        progDailog.setCancelable(true);
+        progDailog.setCancelable(false);
         progDailog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progDailog.setIndeterminate(true);
         progDailog.setIndeterminateDrawable(getResources().getDrawable(R.drawable.splashscreen));
@@ -208,10 +222,11 @@ public class MainActivity extends AppCompatActivity
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show();
                 String currentScreen = getActiveFragment();
-                if (currentScreen.contentEquals(EVENTSFRAGMENTS.name())) {
+                Log.d("CURRENT SCREEN", currentScreen);
+                if (currentScreen.contentEquals(EVENTSFRAGMENT.name())) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     CreateEventDialog createEventDialog = (CreateEventDialog) fragmentManager.findFragmentByTag(CREATEEVENTDIALOG.name());
-                    Log.d(EVENTSFRAGMENTS.name(), "Current screen");
+                    Log.d(EVENTSFRAGMENT.name(), "Current screen");
                     FragmentManager fm = getSupportFragmentManager();
                     if (createEventDialog == null)
                         createEventDialog = new CreateEventDialog();
@@ -233,17 +248,23 @@ public class MainActivity extends AppCompatActivity
                 getFragmentManager().popBackStack();
             } else if (currentScreen.contentEquals(USERPROFILEFRAGMENT.name())) {
                 this.finish();
+            } else if (currentScreen.contentEquals(REGISTRATIONFRAGMENT.name())) {
+                setLoginScreen(this);
             } else if (userSession.isUserLoggedIn()) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                UserProfileFragment userProfileFragment = (UserProfileFragment) fragmentManager.findFragmentByTag(USERPROFILEFRAGMENT.name());
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, userProfileFragment, USERPROFILEFRAGMENT.name());
-                transaction.addToBackStack(USERPROFILEFRAGMENT.name());
-                transaction.commit();
+                setUserProfileScreen();
             } else {
                 this.finish();
             }
         }
+    }
+
+    private void setUserProfileScreen() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        UserProfileFragment userProfileFragment = (UserProfileFragment) fragmentManager.findFragmentByTag(USERPROFILEFRAGMENT.name());
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, userProfileFragment, USERPROFILEFRAGMENT.name());
+        transaction.addToBackStack(USERPROFILEFRAGMENT.name());
+        transaction.commit();
     }
 
     @Override
@@ -275,69 +296,49 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (!userSession.checkLogin()) {
-            setLoginScreen();
+            setLoginScreen(this);
         } else {
 
             if (id == R.id.nav_camera) {
                 // Handle the camera action
             } else if (id == R.id.nav_edit_profile) {
-
+                showLoader();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 EditProfileFragment editProfileFragment = (EditProfileFragment) fragmentManager.findFragmentByTag(EDITPROFILEFRAGMENT.name());
                 if (editProfileFragment == null) {
                     Log.d(EDITPROFILEFRAGMENT.name(), "Null");
                     editProfileFragment = new EditProfileFragment();
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, editProfileFragment, EDITPROFILEFRAGMENT.name());
-                    transaction.addToBackStack(EDITPROFILEFRAGMENT.name());
-                    transaction.commit();
+                    smoothReplaceFragment(editProfileFragment, fragmentManager);
                 } else {
                     Log.d(EDITPROFILEFRAGMENT.name(), "Not Null");
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, editProfileFragment, EDITPROFILEFRAGMENT.name());
-                    transaction.commit();
+                    smoothReplaceFragment(editProfileFragment, fragmentManager);
                 }
 
-                /*EditProfileFragment editProfileFragment = new EditProfileFragment();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, editProfileFragment);
-                transaction.commit();*/
-
-
             } else if (id == R.id.user_profile) {
+                showLoader();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 UserProfileFragment userProfileFragment = (UserProfileFragment) fragmentManager.findFragmentByTag(USERPROFILEFRAGMENT.name());
                 if (userProfileFragment == null) {
                     Log.d(USERPROFILEFRAGMENT.name(), "Null");
                     userProfileFragment = new UserProfileFragment();
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, userProfileFragment, Enums.USERPROFILEFRAGMENT.name());
-                    transaction.addToBackStack(USERPROFILEFRAGMENT.name());
-                    transaction.commit();
+                    smoothReplaceFragment(userProfileFragment, fragmentManager);
                 } else {
                     Log.d(USERPROFILEFRAGMENT.name(), "Not Null");
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, userProfileFragment, USERPROFILEFRAGMENT.name());
-                    transaction.commit();
+                    smoothReplaceFragment(userProfileFragment, fragmentManager);
                 }
 
 
             } else if (id == R.id.hive_events) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
 
-                EventsFragment eventsFragment = (EventsFragment) fragmentManager.findFragmentByTag(EVENTSFRAGMENTS.name());
+                EventsFragment eventsFragment = (EventsFragment) fragmentManager.findFragmentByTag(EVENTSFRAGMENT.name());
                 if (eventsFragment == null) {
-                    Log.d(EVENTSFRAGMENTS.name(), "Null");
+                    Log.d(EVENTSFRAGMENT.name(), "Null");
                     eventsFragment = new EventsFragment();
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, eventsFragment, EVENTSFRAGMENTS.name());
-                    transaction.addToBackStack(EVENTSFRAGMENTS.name());
-                    transaction.commit();
+                    smoothReplaceFragment(eventsFragment, fragmentManager);
                 } else {
-                    Log.d(EVENTSFRAGMENTS.name(), "Not Null");
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, eventsFragment, EVENTSFRAGMENTS.name());
-                    transaction.commit();
+                    Log.d(EVENTSFRAGMENT.name(), "Not Null");
+                    smoothReplaceFragment(eventsFragment, fragmentManager);
                 }
 
             } else if (id == R.id.create_post) {
@@ -346,49 +347,23 @@ public class MainActivity extends AppCompatActivity
                 if (createPostFragment == null) {
                     Log.d(CREATEPOSTFRAGMENT.name(), "Null");
                     createPostFragment = new CreatePostFragment();
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, createPostFragment, CREATEPOSTFRAGMENT.name());
-                    transaction.addToBackStack(CREATEPOSTFRAGMENT.name());
-                    transaction.commit();
+                    smoothReplaceFragment(createPostFragment, fragmentManager);
                 } else {
                     Log.d(CREATEPOSTFRAGMENT.name(), "Not Null");
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, createPostFragment, CREATEPOSTFRAGMENT.name());
-                    transaction.commit();
+                    smoothReplaceFragment(createPostFragment, fragmentManager);
                 }
 
             } else if (id == R.id.all_posts) {
+                showLoader();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 AllPostsFragment allPostsFragment = (AllPostsFragment) fragmentManager.findFragmentByTag(ALLPOSTSFRAGMENT.name());
                 if (allPostsFragment == null) {
                     Log.d(ALLPOSTSFRAGMENT.name(), "Null");
                     allPostsFragment = new AllPostsFragment();
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, allPostsFragment, ALLPOSTSFRAGMENT.name());
-                    transaction.addToBackStack(Enums.ALLPOSTSFRAGMENT.name());
-                    transaction.commit();
+                    smoothReplaceFragment(allPostsFragment, fragmentManager);
                 } else {
                     Log.d(ALLPOSTSFRAGMENT.name(), "Not Null");
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, allPostsFragment, ALLPOSTSFRAGMENT.name());
-                    transaction.commit();
-                }
-
-            } else if (id == R.id.events) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                EventsFragment eventsFragment = (EventsFragment) fragmentManager.findFragmentByTag(EVENTSFRAGMENTS.name());
-                if (eventsFragment == null) {
-                    Log.d(EVENTSFRAGMENTS.name(), "Null");
-                    eventsFragment = new EventsFragment();
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, eventsFragment, EVENTSFRAGMENTS.name());
-                    transaction.addToBackStack(EVENTSFRAGMENTS.name());
-                    transaction.commit();
-                } else {
-                    Log.d(EVENTSFRAGMENTS.name(), "Not Null");
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, eventsFragment, EVENTSFRAGMENTS.name());
-                    transaction.commit();
+                    smoothReplaceFragment(allPostsFragment, fragmentManager);
                 }
 
             }
@@ -454,6 +429,29 @@ public class MainActivity extends AppCompatActivity
                 .setAction("Action", null).show();
     }
 
+
+    private final static Handler mDrawerHandler = new Handler();
+
+    //Wait for few millis before replacing fragment to allow slidemenu to fully close.
+    public static void smoothReplaceFragment(final Fragment fragment, final FragmentManager fragmentManager) {
+        mDrawerHandler.removeCallbacksAndMessages(null);
+        mDrawerHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                replaceFragment(fragment, fragmentManager);
+            }
+        }, 350);
+    }
+
+    //Replace Fragment
+    public static void replaceFragment(Fragment fragment, FragmentManager fragmentManager) {
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        String fragmentName = fragment.getClass().getSimpleName().toUpperCase();
+        transaction.replace(R.id.fragment_container, fragment, fragmentName);
+        transaction.addToBackStack(fragmentName);
+        transaction.commit();
+    }
 
     /**
      * Hides the soft keyboard

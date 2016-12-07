@@ -18,6 +18,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Set;
 
+import hive.hive.com.hive.Activities.MainActivity;
 import hive.hive.com.hive.Utils.ConnectionUtils;
 import hive.hive.com.hive.Utils.StringUtils;
 
@@ -121,7 +122,7 @@ public class PostToHiveConnection extends AsyncTask<Void, Void, Boolean> {
             dos.writeBytes("Content-Disposition: form-data; name=\"category\"" + lineEnd + lineEnd
                     + contentValues.getAsString("category") + lineEnd);
 
-            String filePath = "http://abhishek.activexenon.com/captured_images/" + saltedImageName;
+            String filePath = "http://abhishek.activexenon.com/hive/captured_images/" + saltedImageName;
             dos.writeBytes(twoHyphens + boundary + lineEnd);
             dos.writeBytes("Content-Disposition: form-data; name=\"filepath\"" + lineEnd + lineEnd
                     + filePath + lineEnd);
@@ -206,7 +207,12 @@ public class PostToHiveConnection extends AsyncTask<Void, Void, Boolean> {
         return result.toString();
     }
 
-   /* *//**
+    @Override
+    protected void onPostExecute(Boolean aBoolean) {
+        MainActivity.hideLoader();
+    }
+
+    /* *//**
      * Adds a form field to the request
      *
      * @param name  field name

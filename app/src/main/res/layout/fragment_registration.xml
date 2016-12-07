@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvRegistration_registration"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="33dp"
                 android:text="Name : " />
 
             <EditText
@@ -37,14 +37,15 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_toRightOf="@+id/tvName_registration"
-                android:hint="Enter Name" />
+                android:hint="Enter Name"
+                android:maxLines="1" />
 
             <TextView
                 android:id="@+id/tvEmail_registration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/etName_registration"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="27dp"
                 android:text="Email : " />
 
             <EditText
@@ -55,43 +56,47 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp"
                 android:layout_toRightOf="@+id/tvEmail_registration"
-                android:hint="Enter Email ID" />
+                android:hint="Enter Email ID"
+                android:inputType="textEmailAddress"
+                android:maxLines="1" />
 
             <TextView
+                android:id="@+id/tvPassword_registration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/etEmail_registration"
-                android:layout_marginTop="25dp"
-                android:id="@+id/tvPassword_registration"
-                android:text="Password"/>
+                android:layout_marginTop="27dp"
+                android:text="Password : " />
 
             <EditText
+                android:id="@+id/etPassword_registration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:ems="10"
-                android:hint="Enter a strong password"
-                android:id="@+id/etPassword_registration"
-                android:layout_toRightOf="@id/tvPassword_registration"
                 android:layout_below="@+id/etEmail_registration"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginLeft="10dp"/>
+                android:layout_toRightOf="@id/tvPassword_registration"
+                android:ems="10"
+                android:hint="Enter password"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:maxLength="16"/>
 
             <TextView
                 android:id="@+id/tvDOB_registration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/etPassword_registration"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="27dp"
                 android:text="Date Of Birth : " />
 
-            <EditText
+            <TextView
                 android:id="@+id/etDOB_registration"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/etPassword_registration"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="27dp"
                 android:layout_toRightOf="@+id/tvDOB_registration"
                 android:hint="Enter DOB" />
 
@@ -100,7 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/etDOB_registration"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="47dp"
                 android:text="Hometown : " />
 
             <fragment
@@ -108,10 +113,10 @@
                 android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/tvHometown_registration"
-                android:layout_marginLeft="20dp"
                 android:layout_below="@+id/etDOB_registration"
-                android:layout_marginTop="25dp" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="30dp"
+                android:layout_toRightOf="@+id/tvHometown_registration" />
 
             <Button
                 android:id="@+id/bRegister_registration"

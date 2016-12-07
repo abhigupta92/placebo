@@ -15,6 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import hive.hive.com.hive.Activities.MainActivity;
 import hive.hive.com.hive.GSONEntities.UserSettingsDetails;
 
 /**
@@ -84,5 +85,11 @@ public class GetUserSettingsConnection extends AsyncTask<Void, Void, UserSetting
             Log.d("Exception", e.toString());
         }
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(UserSettingsDetails userSettingsDetails) {
+        super.onPostExecute(userSettingsDetails);
+        MainActivity.hideLoader();
     }
 }

@@ -1,9 +1,7 @@
 package hive.hive.com.hive.Connections;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 
@@ -19,7 +17,6 @@ import java.net.URLEncoder;
 
 import hive.hive.com.hive.Activities.MainActivity;
 import hive.hive.com.hive.Fragments.AllPostsFragment;
-import hive.hive.com.hive.R;
 
 /**
  * Created by abhishekgupta on 05/08/15.
@@ -27,13 +24,10 @@ import hive.hive.com.hive.R;
 public class HivePostsConnection extends AsyncTask<Void, Void, JSONArray> {
 
     public static long start, end;
-    public ProgressDialog dialog;
-    AllPostsFragment context;
 
     public HivePostsConnection(AllPostsFragment context, long start, long end) {
         this.start = start;
         this.end = end;
-        this.context = context;
     }
 
     @Override
@@ -102,22 +96,11 @@ public class HivePostsConnection extends AsyncTask<Void, Void, JSONArray> {
     @Override
     protected void onPreExecute() {
 
-        Log.d("HIVEPOSTCONNECTION","FIRST");
-
-        dialog = new ProgressDialog(context.getActivity());
-        dialog.setCancelable(true);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setIndeterminate(true);
-        dialog.setIndeterminateDrawable(context.getResources().getDrawable(R.drawable.splashscreen));
-
-        dialog.show();
-
-        //Toast.makeText(context.getActivity(), "TESTING CONTEXT STUFF !", Toast.LENGTH_LONG).show();
     }
 
     @Override
     protected void onPostExecute(JSONArray jsonArray) {
-        //dialog.hide();
+        MainActivity.hideLoader();
     }
 
     public static long getStart() {

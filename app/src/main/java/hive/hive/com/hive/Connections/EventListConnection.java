@@ -19,6 +19,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Set;
 
+import hive.hive.com.hive.Activities.MainActivity;
 import hive.hive.com.hive.Fragments.EventsFragment;
 
 import static hive.hive.com.hive.Utils.Enums.EVENTLISTCONNECTION;
@@ -95,7 +96,7 @@ public class EventListConnection extends AsyncTask<Void, Void, JSONArray> {
         dialog.setMessage("Fetching list...");
         //dialog.setIndeterminateDrawable(context.getResources().getDrawable(R.drawable.splashscreen));
 
-        dialog.show();
+        //dialog.show();
 
         //Toast.makeText(context.getActivity(), "TESTING CONTEXT STUFF !", Toast.LENGTH_LONG).show();
     }
@@ -122,6 +123,6 @@ public class EventListConnection extends AsyncTask<Void, Void, JSONArray> {
 
     @Override
     protected void onPostExecute(JSONArray jsonArray) {
-        dialog.dismiss();
+        MainActivity.hideLoader();
     }
 }

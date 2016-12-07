@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
@@ -34,6 +35,8 @@ import hive.hive.com.hive.Activities.MainActivity;
 import hive.hive.com.hive.ConnectionResults.RegisterUserResultDetails;
 import hive.hive.com.hive.R;
 import hive.hive.com.hive.Utils.ConnectionUtils;
+import hive.hive.com.hive.Utils.EmailValidator;
+import hive.hive.com.hive.Utils.PasswordValidator;
 import hive.hive.com.hive.Utils.StringUtils;
 import hive.hive.com.hive.Utils.UserSessionUtils;
 
@@ -53,10 +56,12 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
     static View view;
 
     private int mYear, mMonth, mDay;
-    EditText etName, etDOB, etEmail, etPassword;
-    TextView tvName, tvDOB, tvEmail, tvPassword;
+    EditText etName, etEmail, etPassword;
+    TextView tvName, tvDOB, tvEmail, tvPassword, etDOB, tvHometown;
     Button bRegister;
     PlaceAutocompleteFragment etHometown;
+    EmailValidator emailValidator;
+    PasswordValidator passwordValidator;
 
     UserSessionUtils session;
 
@@ -91,7 +96,10 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
 
     private void initializeViews(View view) {
 
-        etDOB = (EditText) view.findViewById(R.id.etDOB_registration);
+        emailValidator = new EmailValidator();
+        passwordValidator = new PasswordValidator();
+
+        etDOB = (TextView) view.findViewById(R.id.etDOB_registration);
         etName = (EditText) view.findViewById(R.id.etName_registration);
         etEmail = (EditText) view.findViewById(R.id.etEmail_registration);
         etPassword = (EditText) view.findViewById(R.id.etPassword_registration);
@@ -101,6 +109,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         tvName = (TextView) view.findViewById(R.id.tvName_registration);
         tvEmail = (TextView) view.findViewById(R.id.tvEmail_registration);
         tvPassword = (TextView) view.findViewById(R.id.tvPassword_registration);
+        tvHometown = (TextView) view.findViewById(R.id.tvHometown_registration);
 
         etHometown.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -151,29 +160,32 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bRegister_registration:
-
+                MainActivity.hideSoftKeyboard(getActivity());
                 clearErrors();
+                if (checkForValidFields()) {
 
-                Log.d("Hometown Selected : ", selectedHometown);
-                ContentValues cvRegDetails = setUserDetails();
+                    Log.d("Hometown Selected : ", selectedHometown);
+                    ContentValues cvRegDetails = setUserDetails();
 
-                RegisterUserResultDetails result = ConnectionUtils.registerUser(cvRegDetails);
-                if (result != null) {
-                    if (result.getResult().contentEquals("success")) {
-                        session = MainActivity.getUserSession();
-                        session.createUserLoginSession(result.getUserId(), result.getSalt(), Long.parseLong(HIVE_LOGIN.getVal()));
-                        EditProfileFragment editProfileFragment = new EditProfileFragment();
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_container, editProfileFragment, EDITPROFILEFRAGMENT.name());
-                        transaction.addToBackStack(EDITPROFILEFRAGMENT.name());
-                        transaction.commit();
-                    } else if (result.getResult().contentEquals("fail")) {
-                        if (result.getErrCd().contentEquals("DUPLICATE")) {
-                            if (result.getErrMsg().contentEquals("EMAIL")) {
-                                tvEmail.setTextColor(Color.RED);
-                                tvEmail.setText("Email" + Html.fromHtml("<sup>*</sup>") + " : ");
-                            } else if (result.getErrMsg().contentEquals("SALT")) {
+                    RegisterUserResultDetails result = ConnectionUtils.registerUser(cvRegDetails);
+                    if (result != null) {
+                        if (result.getResult().contentEquals("success")) {
+                            session = MainActivity.getUserSession();
+                            session.createUserLoginSession(result.getUserId(), result.getSalt(), Long.parseLong(HIVE_LOGIN.getVal()));
+                            ConnectionUtils.setUserSessionDetails(session.getUserDetails());
+                            EditProfileFragment editProfileFragment = new EditProfileFragment();
+                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                            transaction.replace(R.id.fragment_container, editProfileFragment, EDITPROFILEFRAGMENT.name());
+                            transaction.addToBackStack(EDITPROFILEFRAGMENT.name());
+                            transaction.commit();
+                        } else if (result.getResult().contentEquals("fail")) {
+                            if (result.getErrCd().contentEquals("DUPLICATE")) {
+                                if (result.getErrMsg().contentEquals("EMAIL")) {
+                                    tvEmail.setTextColor(Color.RED);
+                                    tvEmail.setText("Email" + Html.fromHtml("<sup>*</sup>") + " : ");
+                                } else if (result.getErrMsg().contentEquals("SALT")) {
 
+                                }
                             }
                         }
                     }
@@ -187,6 +199,76 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
                 datePickerDialog.show();
                 break;
         }
+    }
+
+    private boolean checkForValidFields() {
+
+        boolean validFields = true;
+
+        if (etName.length() == 0) {
+            tvName.setTextColor(Color.RED);
+            validFields = false;
+            return validFields;
+        }
+        if (!emailValidator.validate(etEmail.getText().toString())) {
+            tvEmail.setTextColor(Color.RED);
+            validFields = false;
+            return validFields;
+        }
+        if (!passwordValidator.validate(etPassword.getText().toString())) {
+            validFields = false;
+            tvPassword.setTextColor(Color.RED);
+            showPasswordErrorMessage();
+            return validFields;
+        }
+        if (etDOB.getText().toString().length() == 0) {
+            tvDOB.setTextColor(Color.RED);
+            validFields = false;
+            return validFields;
+        }
+        if (selectedHometown == null || selectedHometown.length() == 0) {
+            validFields = false;
+            tvHometown.setTextColor(Color.RED);
+            return validFields;
+        }
+
+        return validFields;
+    }
+
+    private void showPasswordErrorMessage() {
+
+        String password = etPassword.getText().toString();
+        if (password.length() < 6) {
+            Snackbar.make(getActivity().getCurrentFocus(), "Password must be 6 characters long at least", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            return;
+        }
+        boolean hasUppercase = !password.equals(password.toLowerCase());
+        if (!hasUppercase) {
+            Snackbar.make(getActivity().getCurrentFocus(), "Password must contain Uppercase", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            return;
+        }
+
+        if (password.contains("*")) {
+            Snackbar.make(getActivity().getCurrentFocus(), "Password cannot contain * symbol", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            return;
+        }
+
+        if (!containsDigit(password)) {
+            Snackbar.make(getActivity().getCurrentFocus(), "Password must contain a number", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            return;
+        }
+
+        boolean hasLowercase = !password.equals(password.toUpperCase());
+        if (!hasLowercase) {
+            Snackbar.make(getActivity().getCurrentFocus(), "Password must contain Lowercase character", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            return;
+        }
+
     }
 
     private ContentValues setUserDetails() {
@@ -211,6 +293,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         tvEmail.setTextColor(Color.BLACK);
         tvDOB.setTextColor(Color.BLACK);
         tvPassword.setTextColor(Color.BLACK);
+        tvHometown.setTextColor(Color.BLACK);
 
         tvName.setText("Name : ");
         tvEmail.setText("Email : ");
@@ -247,8 +330,24 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
 
                     }
                 }, mYear, mMonth, mDay);
+        datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
         return datePickerDialog;
     }
+
+    public final boolean containsDigit(String s) {
+        boolean containsDigit = false;
+
+        if (s != null && !s.isEmpty()) {
+            for (char c : s.toCharArray()) {
+                if (containsDigit = Character.isDigit(c)) {
+                    break;
+                }
+            }
+        }
+
+        return containsDigit;
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this

@@ -14,6 +14,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import hive.hive.com.hive.Activities.MainActivity;
+
 /**
  * Created by abhishekgupta on 19/08/15.
  */
@@ -79,5 +81,11 @@ public class UserFBDetails extends AsyncTask<Void, Void, String> {
         }
 
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+        super.onPostExecute(s);
+        MainActivity.hideLoader();
     }
 }

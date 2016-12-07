@@ -17,7 +17,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -60,7 +59,6 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     private boolean haveGeoLocationDetails = false;
     EditText etName, etAbout;
     private String gender;
-    CallbackManager callbackManager;
     Button bSubmit, bLogout;
     public static View view;
     private static long selectedHiveId;
@@ -178,12 +176,14 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                         ClosestHiveDetail closestHiveDetail = new ClosestHiveDetail(1, 0, String.valueOf(place.getName()), 0);
                         listOfHives.add(closestHiveDetail);
                     }
+                    if(listOfHives.size() == 1 && listOfHives.get(0).getHiveRegion().contentEquals("notset")){
+                        listOfHives.get(0).setHiveRegion(String.valueOf(place.getName()));
+                    }
                     AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
                     builderSingle.setIcon(R.drawable.ic_cast_light);
                     builderSingle.setTitle("Select A Hive :");
 
                     if (listOfHives != null) {
-                        Log.d("Not Null", "hives");
 
                         final HiveSelectionCustomListAdapter adapter = new HiveSelectionCustomListAdapter(getActivity().getApplicationContext(), R.layout.closest_hive_detail, listOfHives);
 
@@ -201,13 +201,13 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        ClosestHiveDetail strName = (ClosestHiveDetail) adapter.getItem(which);
+                                        ClosestHiveDetail hiveDetail = (ClosestHiveDetail) adapter.getItem(which);
                                         AlertDialog.Builder builderInner = new AlertDialog.Builder(
                                                 getContext());
-                                        selectedHiveId = strName.getHiveID();
-                                        selectedClusterId = strName.getClusterId();
-                                        builderInner.setMessage(String.valueOf(strName.getHiveID()));
-                                        builderInner.setTitle("Your Selected Item is");
+                                        selectedHiveId = hiveDetail.getHiveID();
+                                        selectedClusterId = hiveDetail.getClusterId();
+                                        builderInner.setMessage(String.valueOf(hiveDetail.getHiveRegion()));
+                                        builderInner.setTitle("Your Selected Hive is : ");
                                         builderInner.setPositiveButton(
                                                 "Ok",
                                                 new DialogInterface.OnClickListener() {

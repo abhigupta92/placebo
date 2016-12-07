@@ -18,6 +18,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Set;
 
+import hive.hive.com.hive.Activities.MainActivity;
+
 /**
  * Created by abhishekgupta on 17/08/15.
  */
@@ -94,4 +96,8 @@ public class RegisterUserConnection extends AsyncTask<Void, Void, JSONObject> {
         return result.toString();
     }
 
+    @Override
+    protected void onPostExecute(JSONObject jsonObject) {
+        MainActivity.hideLoader();
+    }
 }

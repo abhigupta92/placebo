@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -19,7 +18,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Set;
 
-import hive.hive.com.hive.Utils.Enums;
+import hive.hive.com.hive.Activities.MainActivity;
 
 /**
  * Created by abhishekgupta on 23/05/16.
@@ -95,5 +94,11 @@ public class CreateEventConnection extends AsyncTask<Void, Void, JSONObject> {
         }
 
         return result.toString();
+    }
+
+    @Override
+    protected void onPostExecute(JSONObject jsonObject) {
+        super.onPostExecute(jsonObject);
+        MainActivity.hideLoader();
     }
 }

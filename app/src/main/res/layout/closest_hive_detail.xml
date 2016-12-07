@@ -1,21 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/hiveName"
-        android:layout_width="match_parent"
+        android:id="@+id/hiveName_closest_hive_detail"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="30sp"
+        android:layout_marginTop="10sp"
         android:text="asdasdasd"
-        android:textStyle="bold"
-        android:textColor="@color/com_facebook_blue"/>
+        android:textColor="@color/com_facebook_blue"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/hiveRegion"
-        android:layout_width="match_parent"
+        android:id="@+id/hiveRegion_closest_hive_detail"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="normal"
-        android:textColor="@color/common_google_signin_btn_text_light_focused"/>
+        android:layout_marginLeft="30sp"
+        android:layout_marginTop="5sp"
+        android:text="xxx"
+        android:textColor="@color/com_facebook_blue"
+        android:textStyle="normal" />
+
+    <TextView
+        android:id="@+id/strength_closest_hive_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30sp"
+        android:layout_marginTop="5sp"
+        android:text="strength"
+        android:textColor="@color/com_facebook_blue" />
 
 </LinearLayout>

@@ -213,10 +213,10 @@ public class ConnectionUtils {
         geoLocationDetails = (new GetGeoLocationDetailsConnection(placeID).execute());
         contentValues = geoLocationDetails.get();
         if (contentValues.size() >= 1) {
-            contentValues.put("ProfileID", userSessionDetails.getKEY_USERID());
+            contentValues.put("userId", userSessionDetails.getKEY_USERID());
             contentValues.put("geoTag", geoTag);
             contentValues.put("Lat", String.valueOf(latLng.latitude));
-            contentValues.put("Long", String.valueOf(latLng.longitude));
+            contentValues.put("Lng", String.valueOf(latLng.longitude));
             return true;
 
         } else {

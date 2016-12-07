@@ -15,6 +15,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import hive.hive.com.hive.Activities.MainActivity;
+
 import static hive.hive.com.hive.Utils.ConnectionUtils.getQuery;
 
 /**
@@ -68,5 +70,10 @@ public class LoginUserConnection extends AsyncTask<Void, Void, JSONObject> {
         }
 
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(JSONObject jsonObject) {
+        MainActivity.hideLoader();
     }
 }
