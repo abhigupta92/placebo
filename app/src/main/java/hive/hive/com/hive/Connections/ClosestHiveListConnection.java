@@ -65,8 +65,8 @@ public class ClosestHiveListConnection extends AsyncTask<Void, Void, JSONArray> 
                     result.append(data);
                 }
                 Log.d("HIVES : ", result.toString());
-                details = new JSONArray(result.toString());
-                //Log.d("Details", String.valueOf(details.length()));
+                if (result.length() != 0)
+                    details = new JSONArray(result.toString());
                 return details;
             }
 
